@@ -3,61 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Page</title>
-
+    <title>Output Control Tasks</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
+            background-color: #f4f4f9;
             margin: 0;
+            padding: 0;
         }
 
         header {
-            background-color: #333;
+            background-color: #4CAF50;
             color: white;
-            padding: 20px;
+            padding: 30px 20px;
+            text-align: center;
         }
 
         section {
+            margin: 20px auto;
             padding: 20px;
+            width: 80%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         button {
+            margin-top: 10px;
             padding: 10px 20px;
             font-size: 16px;
             background-color: #007BFF;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
 
         button:hover {
             background-color: #0056b3;
         }
+
+        .output {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #ff5722;
+        }
     </style>
 </head>
-
 <body>
 
 <header>
-    <h1>Welcome to My Website</h1>
+    <h1>Interactive Output Control Tasks</h1>
 </header>
 
 <section>
-    <h2>About This Page</h2>
-    <p>This is a simple web page created using HTML, CSS, and a little JavaScript.</p>
+    <h2>Task 1: Basic Output Control (Example-Based)</h2>
+    <p>Design a simple system that controls an output device. <br>
+       Example: LED control, indicator system, warning light. <br>
+       Think about where such systems are used in real life.</p>
+    <button onclick="task1Output()">Show Example</button>
+    <div id="task1" class="output"></div>
+</section>
 
-    <img src="https://via.placeholder.com/300" alt="Example Image">
+<section>
+    <h2>Task 2: Variable Control System</h2>
+    <p>Design a system where the output behavior changes gradually or dynamically. <br>
+       Example: brightness control, speed control, intensity variation. <br>
+       Relate it to a real-life application such as smart lighting or automation.</p>
+    <button onclick="task2Output()">Show Example</button>
+    <div id="task2" class="output"></div>
+</section>
 
-    <br><br>
-
-    <button onclick="showMessage()">Click Me</button>
+<section>
+    <h2>Task 3: User Interaction System</h2>
+    <p>Design a system that responds to user input. <br>
+       Example: button-based control, switch-based logic, manual override. <br>
+       Think about how humans interact with machines in daily life.</p>
+    <button onclick="task3Output()">Show Example</button>
+    <div id="task3" class="output"></div>
 </section>
 
 <script>
-function showMessage() {
-    alert("Hello! You clicked the button.");
+function task1Output() {
+    document.getElementById("task1").textContent = 
+        "Example: A warning light in a car dashboard turns on when fuel is low.";
+}
+
+function task2Output() {
+    document.getElementById("task2").textContent = 
+        "Example: Smart room lighting that dims or brightens based on the time of day.";
+}
+
+function task3Output() {
+    document.getElementById("task3").textContent = 
+        "Example: A push button to open a garage door or turn on a machine.";
 }
 </script>
 

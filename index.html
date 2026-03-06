@@ -1,112 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Output Control Tasks</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-
-        section {
-            margin: 20px auto;
-            padding: 20px;
-            width: 80%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        p {
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .output {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #ff5722;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Output Control Simulation</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+        color: #333;
+    }
+    header {
+        background-color: #0d47a1;
+        color: white;
+        padding: 40px 20px;
+        text-align: center;
+    }
+    h1 {
+        margin: 0;
+        font-size: 2.5em;
+    }
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        padding: 40px 20px;
+    }
+    .card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+    }
+    .led {
+        width: 40px;
+        height: 40px;
+        background: #555;
+        border-radius: 50%;
+        margin: 20px auto;
+        box-shadow: 0 0 10px #000;
+        transition: background 0.3s, box-shadow 0.3s;
+    }
+    .led.on {
+        background: red;
+        box-shadow: 0 0 20px red;
+    }
+    .slider {
+        width: 80%;
+        margin: 20px auto;
+    }
+    .output-light {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: yellow;
+        margin: 20px auto;
+        box-shadow: 0 0 30px rgba(255,255,0,0.5);
+        transition: box-shadow 0.3s, opacity 0.3s;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 8px;
+        background-color: #0d47a1;
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    button:hover {
+        background-color: #0740a0;
+    }
+</style>
 </head>
 <body>
 
 <header>
-    <h1>Interactive Output Control Tasks</h1>
+    <h1>Interactive Output Control Simulation</h1>
+    <p>Explore real-life examples of output control, variable control, and user interaction systems</p>
 </header>
 
-<section>
-    <h2>Task 1: Basic Output Control (Example-Based)</h2>
-    <p>Design a simple system that controls an output device. <br>
-       Example: LED control, indicator system, warning light. <br>
-       Think about where such systems are used in real life.</p>
-    <button onclick="task1Output()">Show Example</button>
-    <div id="task1" class="output"></div>
-</section>
+<div class="container">
 
-<section>
-    <h2>Task 2: Variable Control System</h2>
-    <p>Design a system where the output behavior changes gradually or dynamically. <br>
-       Example: brightness control, speed control, intensity variation. <br>
-       Relate it to a real-life application such as smart lighting or automation.</p>
-    <button onclick="task2Output()">Show Example</button>
-    <div id="task2" class="output"></div>
-</section>
+    <!-- Task 1: Basic Output Control -->
+    <div class="card">
+        <h2>Task 1: LED Control</h2>
+        <p>Simulate a warning light or indicator system.</p>
+        <div id="led" class="led"></div>
+        <button onclick="toggleLED()">Toggle LED</button>
+    </div>
 
-<section>
-    <h2>Task 3: User Interaction System</h2>
-    <p>Design a system that responds to user input. <br>
-       Example: button-based control, switch-based logic, manual override. <br>
-       Think about how humans interact with machines in daily life.</p>
-    <button onclick="task3Output()">Show Example</button>
-    <div id="task3" class="output"></div>
-</section>
+    <!-- Task 2: Variable Control System -->
+    <div class="card">
+        <h2>Task 2: Brightness Control</h2>
+        <p>Simulate variable output like smart lighting.</p>
+        <input type="range" min="0" max="100" value="50" class="slider" id="brightnessSlider" oninput="adjustBrightness(this.value)">
+        <div id="light" class="output-light"></div>
+    </div>
+
+    <!-- Task 3: User Interaction System -->
+    <div class="card">
+        <h2>Task 3: User Interaction</h2>
+        <p>Simulate button-based control or manual override.</p>
+        <button onclick="userAction('Machine ON')">Machine ON</button>
+        <button onclick="userAction('Machine OFF')">Machine OFF</button>
+        <div id="userOutput" class="output-light" style="background: gray;"></div>
+    </div>
+
+</div>
 
 <script>
-function task1Output() {
-    document.getElementById("task1").textContent = 
-        "Example: A warning light in a car dashboard turns on when fuel is low.";
-}
+    // Task 1
+    function toggleLED() {
+        const led = document.getElementById("led");
+        led.classList.toggle("on");
+    }
 
-function task2Output() {
-    document.getElementById("task2").textContent = 
-        "Example: Smart room lighting that dims or brightens based on the time of day.";
-}
+    // Task 2
+    function adjustBrightness(value) {
+        const light = document.getElementById("light");
+        const opacity = value / 100;
+        light.style.opacity = opacity;
+        light.style.boxShadow = `0 0 ${30*opacity}px rgba(255,255,0,${opacity})`;
+    }
 
-function task3Output() {
-    document.getElementById("task3").textContent = 
-        "Example: A push button to open a garage door or turn on a machine.";
-}
+    // Task 3
+    function userAction(action) {
+        const output = document.getElementById("userOutput");
+        if(action === 'Machine ON') {
+            output.style.background = 'green';
+            output.style.boxShadow = '0 0 30px green';
+        } else {
+            output.style.background = 'gray';
+            output.style.boxShadow = '0 0 10px rgba(0,0,0,0.2)';
+        }
+    }
 </script>
 
 </body>

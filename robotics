@@ -1,194 +1,748 @@
-#include "pitches.h"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Robotics Project — Joyal Varghese</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-/* Constants - define pin numbers for LEDs,
-   buttons and speaker, and also the game tones: */
-const uint8_t ledPins[] = {9, 10, 11, 12};
-const uint8_t buttonPins[] = {2, 3, 4, 5};
-#define SPEAKER_PIN 8
-
-// These are connected to 74HC595 shift register (used to show game score):
-const int LATCH_PIN = A1;  // 74HC595 pin 12
-const int DATA_PIN = A0;  // 74HC595pin 14
-const int CLOCK_PIN = A2;  // 74HC595 pin 11
-
-#define MAX_GAME_LENGTH 100
-
-const int gameTones[] = { NOTE_G3, NOTE_C4, NOTE_E4, NOTE_G5};
-
-/* Global variables - store the game state */
-uint8_t gameSequence[MAX_GAME_LENGTH] = {0};
-uint8_t gameIndex = 0;
-
-/**
-   Set up the Arduino board and initialize Serial communication
-*/
-void setup() {
-  Serial.begin(9600);
-  for (byte i = 0; i < 4; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    pinMode(buttonPins[i], INPUT_PULLUP);
-  }
-  pinMode(SPEAKER_PIN, OUTPUT);
-  pinMode(LATCH_PIN, OUTPUT);
-  pinMode(CLOCK_PIN, OUTPUT);
-  pinMode(DATA_PIN, OUTPUT);
-
-  // The following line primes the random number generator.
-  // It assumes pin A3 is floating (disconnected):
-  randomSeed(analogRead(A3));
+:root{
+  --black:#09090700;
+  --bg:#0a0a08;
+  --surface:#111110;
+  --card:#161612;
+  --border:#252520;
+  --border-gold:#7a6535;
+  --gold:#c9a84c;
+  --gold-bright:#e8c96d;
+  --gold-dim:#4a3d20;
+  --cream:#d4c9a0;
+  --white:#f0ebe0;
+  --muted:#5a5545;
+  --text:#9a9070;
+  --text-light:#c0b490;
+  --green:#007a4d;
+  --green-light:#00a366;
+  --red:#8a3030;
 }
 
-/* Digit table for the 7-segment display */
-const uint8_t digitTable[] = {
-  0b11000000,
-  0b11111001,
-  0b10100100,
-  0b10110000,
-  0b10011001,
-  0b10010010,
-  0b10000010,
-  0b11111000,
-  0b10000000,
-  0b10010000,
-};
-const uint8_t DASH = 0b10111111;
+html{scroll-behavior:smooth}
 
-void sendScore(uint8_t high, uint8_t low) {
-  digitalWrite(LATCH_PIN, LOW);
-  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, low);
-  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, high);
-  digitalWrite(LATCH_PIN, HIGH);
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Montserrat',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  min-height:100vh;
 }
 
-void displayScore() {
-  int high = gameIndex % 100 / 10;
-  int low = gameIndex % 10;
-  sendScore(high ? digitTable[high] : 0xff, digitTable[low]);
+/* GRAIN */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.7;
 }
 
-/**
-   Lights the given LED and plays a suitable tone
-*/
-void lightLedAndPlayTone(byte ledIndex) {
-  digitalWrite(ledPins[ledIndex], HIGH);
-  tone(SPEAKER_PIN, gameTones[ledIndex]);
-  delay(300);
-  digitalWrite(ledPins[ledIndex], LOW);
-  noTone(SPEAKER_PIN);
+/* PAGE LOAD ANIMATION */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.fade-up{animation:fadeUp 0.8s ease forwards;opacity:0;}
+.d1{animation-delay:0.1s}
+.d2{animation-delay:0.25s}
+.d3{animation-delay:0.4s}
+.d4{animation-delay:0.55s}
+.d5{animation-delay:0.7s}
+.d6{animation-delay:0.85s}
+
+/* ═══ TOP BAR ═══ */
+.top-bar{
+  background:var(--green);
+  padding:10px 72px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.top-bar span{
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(255,255,255,0.65);font-weight:400;
 }
 
-/**
-   Plays the current sequence of notes that the user has to repeat
-*/
-void playSequence() {
-  for (int i = 0; i < gameIndex; i++) {
-    byte currentLed = gameSequence[i];
-    lightLedAndPlayTone(currentLed);
-    delay(50);
-  }
+/* ═══ HEADER ═══ */
+header{
+  padding:64px 72px 0;
+  border-bottom:1px solid var(--border-gold);
+  background:linear-gradient(160deg,#0a0a08 0%,#141410 60%,#0a0a08 100%);
+  position:relative;overflow:hidden;
 }
 
-/**
-    Waits until the user pressed one of the buttons,
-    and returns the index of that button
-*/
-byte readButtons() {
-  while (true) {
-    for (byte i = 0; i < 4; i++) {
-      byte buttonPin = buttonPins[i];
-      if (digitalRead(buttonPin) == LOW) {
-        return i;
-      }
-    }
-    delay(1);
-  }
+header::after{
+  content:'';position:absolute;
+  right:-80px;top:-80px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(201,168,76,0.04) 0%,transparent 65%);
+  pointer-events:none;
 }
 
-/**
-  Play the game over sequence, and report the game score
-*/
-void gameOver() {
-  Serial.print("Game over! your score: ");
-  Serial.println(gameIndex - 1);
-  gameIndex = 0;
-  delay(200);
-
-  // Play a Wah-Wah-Wah-Wah sound
-  tone(SPEAKER_PIN, NOTE_DS5);
-  delay(300);
-  tone(SPEAKER_PIN, NOTE_D5);
-  delay(300);
-  tone(SPEAKER_PIN, NOTE_CS5);
-  delay(300);
-  for (byte i = 0; i < 10; i++) {
-    for (int pitch = -10; pitch <= 10; pitch++) {
-      tone(SPEAKER_PIN, NOTE_C5 + pitch);
-      delay(5);
-    }
-  }
-  noTone(SPEAKER_PIN);
-
-  sendScore(DASH, DASH);
-  delay(500);
+.header-inner{
+  display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:start;
 }
 
-/**
-   Get the user's input and compare it with the expected sequence.
-*/
-bool checkUserSequence() {
-  for (int i = 0; i < gameIndex; i++) {
-    byte expectedButton = gameSequence[i];
-    byte actualButton = readButtons();
-    lightLedAndPlayTone(actualButton);
-    if (expectedButton != actualButton) {
-      return false;
-    }
-  }
-
-  return true;
+.crown-row{
+  display:flex;align-items:center;gap:18px;margin-bottom:18px;
+}
+.crown-row .brand-tag{
+  font-size:9px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gold);font-weight:500;
 }
 
-/**
-   Plays a hooray sound whenever the user finishes a level
-*/
-void playLevelUpSound() {
-  tone(SPEAKER_PIN, NOTE_E4);
-  delay(150);
-  tone(SPEAKER_PIN, NOTE_G4);
-  delay(150);
-  tone(SPEAKER_PIN, NOTE_E5);
-  delay(150);
-  tone(SPEAKER_PIN, NOTE_C5);
-  delay(150);
-  tone(SPEAKER_PIN, NOTE_D5);
-  delay(150);
-  tone(SPEAKER_PIN, NOTE_G5);
-  delay(150);
-  noTone(SPEAKER_PIN);
+h1{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(40px,6vw,72px);
+  font-weight:300;color:var(--white);
+  line-height:1.05;letter-spacing:-0.5px;
+}
+h1 em{font-style:italic;color:var(--gold);}
+
+.header-desc{
+  font-size:12px;line-height:2;color:var(--text);
+  margin-top:20px;max-width:560px;font-weight:300;
 }
 
-/**
-   The main game loop
-*/
-void loop() {
-  displayScore();
-
-  // Add a random color to the end of the sequence
-  gameSequence[gameIndex] = random(0, 4);
-  gameIndex++;
-  if (gameIndex >= MAX_GAME_LENGTH) {
-    gameIndex = MAX_GAME_LENGTH - 1;
-  }
-
-  playSequence();
-  if (!checkUserSequence()) {
-    gameOver();
-  }
-
-  delay(300);
-
-  if (gameIndex > 0) {
-    playLevelUpSound();
-    delay(300);
-  }
+.github-link{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:28px;
+  border:1px solid var(--border-gold);
+  padding:12px 24px;
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);font-weight:500;
+  text-decoration:none;
+  transition:background 0.3s,color 0.3s;
 }
+.github-link:hover{background:rgba(201,168,76,0.08);}
+.github-link svg{width:14px;height:14px;fill:var(--gold);}
+
+/* RIGHT CARD */
+.repo-card{
+  background:linear-gradient(145deg,#161612,#0f0f0d);
+  border:1px solid var(--border-gold);
+  padding:32px 28px;
+  position:relative;
+}
+.repo-card::before{
+  content:'';position:absolute;inset:4px;
+  border:1px solid rgba(201,168,76,0.1);pointer-events:none;
+}
+.repo-card .rc-label{
+  font-size:7px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:16px;
+}
+.repo-card .rc-name{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:22px;color:var(--white);font-weight:400;
+  line-height:1.2;
+}
+.repo-card .rc-divider{
+  width:40px;height:1px;background:var(--border-gold);margin:16px 0;
+}
+.stat-row{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.stat-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid var(--border);
+}
+.stat-item:last-child{border-bottom:none;}
+.stat-key{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.stat-val{font-size:11px;color:var(--text-light);font-family:'Courier Prime',monospace;}
+.stat-val.gold{color:var(--gold);}
+.stat-val.fail{color:#c87878;}
+.stat-val.ok{color:#78c878;}
+
+/* BOTTOM SPEC BAR */
+.spec-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--border);
+  margin-top:48px;
+}
+.spec-item{
+  padding:24px 0;text-align:center;
+  border-right:1px solid var(--border);
+}
+.spec-item:last-child{border-right:none;}
+.spec-num{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:32px;font-weight:300;color:var(--gold);
+}
+.spec-label{
+  font-size:7px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);margin-top:6px;font-weight:500;
+}
+
+/* ═══ ORNAMENT ═══ */
+.ornament{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 72px;
+}
+.orn-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-gold),transparent);}
+.orn-diamond{width:5px;height:5px;background:var(--gold-dim);transform:rotate(45deg);border:1px solid var(--border-gold);}
+.orn-text{font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);font-weight:500;}
+
+/* ═══ MAIN ═══ */
+main{padding:0 72px 72px;}
+
+/* ═══ SECTION TITLE ═══ */
+.section-head{
+  display:flex;align-items:baseline;gap:20px;
+  margin-bottom:32px;margin-top:56px;
+}
+.section-head h2{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:28px;font-weight:400;color:var(--white);
+  font-style:italic;
+}
+.section-head .sh-line{
+  flex:1;height:1px;
+  background:linear-gradient(90deg,var(--border-gold),transparent);
+}
+
+/* ═══ WORKFLOW SECTION ═══ */
+.workflow-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:2px;
+}
+
+.wf-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:28px 32px;
+  position:relative;
+  transition:border-color 0.3s;
+}
+.wf-card:hover{border-color:var(--border-gold);}
+.wf-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--wf-color,var(--gold)),transparent 70%);
+}
+
+.wf-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+.wf-num{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:48px;font-weight:300;color:var(--gold);opacity:0.12;line-height:1;
+}
+.wf-badge{
+  border:1px solid var(--wf-color,var(--gold));
+  padding:5px 14px;
+  font-size:8px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--wf-color,var(--gold));font-weight:500;
+}
+
+.wf-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:20px;color:var(--white);font-weight:400;
+  margin-bottom:8px;
+}
+.wf-file{
+  font-family:'Courier Prime',monospace;
+  font-size:11px;color:var(--muted);margin-bottom:14px;
+}
+.wf-desc{font-size:12px;line-height:1.9;color:var(--text);font-weight:300;}
+
+.wf-status{
+  display:flex;align-items:center;gap:8px;
+  margin-top:18px;padding-top:14px;
+  border-top:1px solid var(--border);
+}
+.wf-dot{width:7px;height:7px;border-radius:50%;}
+.wf-dot.fail{background:#c87878;box-shadow:0 0 6px rgba(200,120,120,0.5);}
+.wf-dot.ok{background:#78c878;box-shadow:0 0 6px rgba(120,200,120,0.5);}
+.wf-dot.pending{background:var(--gold);box-shadow:0 0 6px rgba(201,168,76,0.5);}
+.wf-status-text{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:500;}
+
+/* ═══ WORKFLOW FILE BLOCK ═══ */
+.file-block{
+  background:#07070500;
+  background:linear-gradient(135deg,#070705,#0d0d0a);
+  border:1px solid var(--border);
+  padding:0;overflow:hidden;
+}
+.file-block-header{
+  background:rgba(201,168,76,0.05);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.file-block-title{
+  font-family:'Courier Prime',monospace;
+  font-size:11px;color:var(--gold);
+}
+.file-block-badge{
+  font-size:7px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+}
+.code-body{
+  padding:24px 28px;
+  font-family:'Courier Prime',monospace;
+  font-size:12px;line-height:2;
+  color:#7a8a68;
+  overflow-x:auto;
+}
+.cy{color:var(--gold);}
+.cg{color:#8aaa70;}
+.cm{color:#3a3a2a;}
+.cv{color:#a89060;}
+.cs{color:#907860;}
+.cw{color:var(--white);opacity:0.8;}
+
+/* ═══ FEATURES GRID ═══ */
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+}
+.feat-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:32px 28px;
+  transition:border-color 0.3s,transform 0.3s;
+  position:relative;overflow:hidden;
+}
+.feat-card:hover{border-color:var(--border-gold);}
+.feat-card::after{
+  content:'';position:absolute;
+  bottom:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle at bottom right,rgba(201,168,76,0.04),transparent 70%);
+}
+.feat-icon{
+  width:44px;height:44px;
+  border:1px solid var(--border-gold);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+}
+.feat-icon svg{width:20px;height:20px;fill:none;stroke:var(--gold);stroke-width:1.5;}
+.feat-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:18px;color:var(--white);font-weight:400;
+  margin-bottom:10px;
+}
+.feat-desc{font-size:12px;line-height:1.9;color:var(--text);font-weight:300;}
+
+/* ═══ FIX GUIDE ═══ */
+.fix-guide{
+  background:var(--card);
+  border:1px solid var(--border-gold);
+  position:relative;overflow:hidden;
+}
+.fix-guide::before{
+  content:'';position:absolute;top:0;left:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--gold),transparent);
+}
+.fix-guide-header{
+  padding:28px 40px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:20px;
+  background:rgba(201,168,76,0.03);
+}
+.fix-guide-header svg{width:20px;height:20px;fill:none;stroke:var(--gold);stroke-width:1.5;}
+.fix-guide-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:22px;color:var(--white);font-weight:400;font-style:italic;
+}
+.fix-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.fix-step{
+  padding:28px 32px;
+  border-right:1px solid var(--border);
+}
+.fix-step:last-child{border-right:none;}
+.fix-step-num{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:40px;color:var(--gold);opacity:0.2;font-weight:300;
+  line-height:1;margin-bottom:10px;
+}
+.fix-step-title{
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:10px;
+}
+.fix-step-desc{font-size:12px;line-height:1.9;color:var(--text);font-weight:300;}
+
+.code-inline{
+  display:inline-block;
+  background:#070705;
+  border:1px solid var(--border);
+  padding:10px 16px;
+  font-family:'Courier Prime',monospace;
+  font-size:11px;color:var(--gold);
+  margin-top:10px;width:100%;line-height:1.8;
+}
+
+/* ═══ FOOTER ═══ */
+footer{
+  border-top:1px solid var(--border-gold);
+  padding:44px 72px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(90deg,var(--surface),var(--bg));
+}
+.footer-left{display:flex;align-items:center;gap:18px;}
+.footer-name{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:20px;color:var(--gold);font-weight:400;
+}
+.footer-sub{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+.footer-right p{
+  font-size:8px;color:var(--muted);letter-spacing:3px;
+  text-transform:uppercase;text-align:right;margin-top:4px;
+}
+
+@media(max-width:900px){
+  .top-bar,.ornament{padding:10px 24px;}
+  header{padding:40px 24px 0;}
+  .header-inner{grid-template-columns:1fr;}
+  main{padding:0 24px 48px;}
+  .spec-bar{grid-template-columns:repeat(2,1fr);}
+  .workflow-grid,.features-grid,.fix-steps{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:20px;padding:32px 24px;text-align:center;}
+  .footer-right p{text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <span>JOYALVARGHESE07 / Robotics</span>
+  <span>GitHub Repository · Static Deployment</span>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="fade-up d1">
+      <div class="crown-row">
+        <svg viewBox="0 0 48 36" width="40" height="30" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 2 L28 10 L36 6 L32 14 L44 12 L38 22 L44 26 L4 26 L10 22 L4 12 L16 14 L12 6 L20 10 Z" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-linejoin="round"/>
+          <rect x="4" y="28" width="40" height="2.5" fill="#c9a84c" opacity="0.5"/>
+          <rect x="2" y="32" width="44" height="1" fill="#c9a84c" opacity="0.3"/>
+        </svg>
+        <span class="brand-tag">Joyal Varghese · Engineering Portfolio</span>
+      </div>
+
+      <h1>Robotics<br/><em>Project</em></h1>
+
+      <p class="header-desc">
+        An autonomous robotics system built on Arduino — featuring motion control, sensor integration, and automated decision-making logic. Deployed via GitHub Actions as a static showcase site on the <code style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:11px;">main</code> branch.
+      </p>
+
+      <a class="github-link" href="https://github.com/JOYALVARGHESE07/Robotics" target="_blank">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+
+    <!-- REPO CARD -->
+    <div class="repo-card fade-up d2">
+      <div class="rc-label">Repository Info</div>
+      <div class="rc-name">JOYALVARGHESE07<br/>/ Robotics</div>
+      <div class="rc-divider"></div>
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="stat-key">Branch</span>
+          <span class="stat-val gold">main</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-key">Workflow</span>
+          <span class="stat-val">static.yml</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-key">Latest Run</span>
+          <span class="stat-val fail">Run #5 — Failed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-key">Language</span>
+          <span class="stat-val">C++ / HTML</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-key">Platform</span>
+          <span class="stat-val">Arduino Uno</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-key">Deploy Target</span>
+          <span class="stat-val">GitHub Pages</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEC BAR -->
+  <div class="spec-bar fade-up d3">
+    <div class="spec-item">
+      <div class="spec-num">5</div>
+      <div class="spec-label">Workflow Runs</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-num">0</div>
+      <div class="spec-label">Successful Deploys</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-num">C++</div>
+      <div class="spec-label">Primary Language</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-num">GH</div>
+      <div class="spec-label">Pages Deployment</div>
+    </div>
+  </div>
+</header>
+
+<!-- ORNAMENT -->
+<div class="ornament fade-up d3">
+  <div class="orn-line"></div>
+  <div class="orn-diamond"></div>
+  <div class="orn-text">Workflow Status</div>
+  <div class="orn-diamond"></div>
+  <div class="orn-line"></div>
+</div>
+
+<main>
+
+  <!-- WORKFLOW RUNS -->
+  <div class="section-head fade-up d3">
+    <h2>GitHub Actions — Workflow Runs</h2>
+    <div class="sh-line"></div>
+  </div>
+
+  <div class="workflow-grid fade-up d4">
+    <div class="wf-card" style="--wf-color:#c87878">
+      <div class="wf-header">
+        <div class="wf-num">#5</div>
+        <div class="wf-badge">Latest · Failed</div>
+      </div>
+      <div class="wf-title">static.yml Workflow Run</div>
+      <div class="wf-file">.github/workflows/static.yml</div>
+      <div class="wf-desc">Most recent deployment attempt. The workflow triggered on push to <code style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:10px;">main</code> but failed during the GitHub Pages deployment step.</div>
+      <div class="wf-status">
+        <div class="wf-dot fail"></div>
+        <span class="wf-status-text">Failed · main branch</span>
+      </div>
+    </div>
+
+    <div class="wf-card" style="--wf-color:#c87878">
+      <div class="wf-header">
+        <div class="wf-num">#4</div>
+        <div class="wf-badge">Failed</div>
+      </div>
+      <div class="wf-title">static.yml Workflow Run</div>
+      <div class="wf-file">.github/workflows/static.yml</div>
+      <div class="wf-desc">Fourth deployment attempt. Identical failure pattern — workflow run failed on push to <code style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:10px;">main</code>. Likely a persistent configuration issue.</div>
+      <div class="wf-status">
+        <div class="wf-dot fail"></div>
+        <span class="wf-status-text">Failed · main branch</span>
+      </div>
+    </div>
+
+    <div class="wf-card" style="--wf-color:#c87878">
+      <div class="wf-header">
+        <div class="wf-num">#3</div>
+        <div class="wf-badge">Failed</div>
+      </div>
+      <div class="wf-title">static.yml Workflow Run</div>
+      <div class="wf-file">.github/workflows/static.yml</div>
+      <div class="wf-desc">Third deployment run. Workflow failed — consistent with runs #4 and #5. The root cause likely stems from missing Pages permissions or incorrect source configuration.</div>
+      <div class="wf-status">
+        <div class="wf-dot fail"></div>
+        <span class="wf-status-text">Failed · main branch</span>
+      </div>
+    </div>
+
+    <div class="wf-card" style="--wf-color:#c87878">
+      <div class="wf-header">
+        <div class="wf-num">#2</div>
+        <div class="wf-badge">Failed</div>
+      </div>
+      <div class="wf-title">static.yml Workflow Run</div>
+      <div class="wf-file">.github/workflows/static.yml</div>
+      <div class="wf-desc">Second deployment attempt. Same failure on main branch. The pattern across all runs points to a workflow YAML configuration error rather than a code issue.</div>
+      <div class="wf-status">
+        <div class="wf-dot fail"></div>
+        <span class="wf-status-text">Failed · main branch</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW FILE -->
+  <div class="section-head fade-up d4" style="margin-top:64px">
+    <h2>Recommended Workflow File</h2>
+    <div class="sh-line"></div>
+  </div>
+
+  <div class="file-block fade-up d4">
+    <div class="file-block-header">
+      <span class="file-block-title">.github/workflows/static.yml</span>
+      <span class="file-block-badge">GitHub Actions · Pages Deploy</span>
+    </div>
+    <div class="code-body">
+<span class="cm"># Robotics Project — GitHub Pages Deployment</span>
+<span class="cm"># Author: Joyal Varghese</span>
+
+<span class="cy">name:</span> <span class="cw">Deploy Static Site to GitHub Pages</span>
+
+<span class="cy">on:</span>
+  <span class="cg">push:</span>
+    <span class="cv">branches:</span>
+      - <span class="cs">main</span>
+  <span class="cg">workflow_dispatch:</span>
+
+<span class="cy">permissions:</span>
+  <span class="cv">contents:</span> <span class="cs">read</span>
+  <span class="cv">pages:</span> <span class="cs">write</span>
+  <span class="cv">id-token:</span> <span class="cs">write</span>
+
+<span class="cy">concurrency:</span>
+  <span class="cv">group:</span> <span class="cs">pages</span>
+  <span class="cv">cancel-in-progress:</span> <span class="cs">false</span>
+
+<span class="cy">jobs:</span>
+  <span class="cg">deploy:</span>
+    <span class="cv">environment:</span>
+      <span class="cv">name:</span> <span class="cs">github-pages</span>
+      <span class="cv">url:</span> <span class="cs">${{ steps.deployment.outputs.page_url }}</span>
+    <span class="cv">runs-on:</span> <span class="cs">ubuntu-latest</span>
+    <span class="cv">steps:</span>
+      - <span class="cv">name:</span> <span class="cs">Checkout</span>
+        <span class="cg">uses:</span> <span class="cs">actions/checkout@v4</span>
+
+      - <span class="cv">name:</span> <span class="cs">Setup Pages</span>
+        <span class="cg">uses:</span> <span class="cs">actions/configure-pages@v4</span>
+
+      - <span class="cv">name:</span> <span class="cs">Upload Artifact</span>
+        <span class="cg">uses:</span> <span class="cs">actions/upload-pages-artifact@v3</span>
+        <span class="cv">with:</span>
+          <span class="cv">path:</span> <span class="cs">'.'</span>
+
+      - <span class="cv">name:</span> <span class="cs">Deploy to GitHub Pages</span>
+        <span class="cg">id:</span> <span class="cs">deployment</span>
+        <span class="cg">uses:</span> <span class="cs">actions/deploy-pages@v4</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section-head fade-up d4" style="margin-top:64px">
+    <h2>Project Features</h2>
+    <div class="sh-line"></div>
+  </div>
+
+  <div class="features-grid fade-up d5">
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <div class="feat-title">Sensor Integration</div>
+      <div class="feat-desc">Multi-sensor fusion with ultrasonic distance sensing, IR detection, and ambient light monitoring for full environmental awareness.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="feat-title">Motor Control</div>
+      <div class="feat-desc">Precision DC motor and servo control using PWM signals. Supports forward, reverse, turning, and speed-variable movement modes.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="feat-title">Autonomous Logic</div>
+      <div class="feat-desc">Decision-making algorithms for obstacle avoidance, line following, and path planning — all running on the Arduino Uno microcontroller.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="feat-title">Live Display</div>
+      <div class="feat-desc">16×2 LCD module displays real-time sensor readings, system state, and operational mode — keeping the operator informed at a glance.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      </div>
+      <div class="feat-title">Serial Telemetry</div>
+      <div class="feat-desc">Real-time serial output streams sensor data, motor states, and decision logs to a connected PC for debugging and performance analysis.</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="feat-title">Timed Sequences</div>
+      <div class="feat-desc">Programmatic timing sequences control startup routines, sensor warm-up delays, and periodic action cycles with millisecond precision.</div>
+    </div>
+  </div>
+
+  <!-- FIX GUIDE -->
+  <div class="section-head fade-up d5" style="margin-top:64px">
+    <h2>Deployment Fix Guide</h2>
+    <div class="sh-line"></div>
+  </div>
+
+  <div class="fix-guide fade-up d6">
+    <div class="fix-guide-header">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+      <div class="fix-guide-title">Three Steps to Fix the Failing Workflow</div>
+    </div>
+    <div class="fix-steps">
+      <div class="fix-step">
+        <div class="fix-step-num">01</div>
+        <div class="fix-step-title">Enable GitHub Pages</div>
+        <div class="fix-step-desc">Go to your repository → <strong style="color:var(--text-light)">Settings</strong> → <strong style="color:var(--text-light)">Pages</strong>. Under <em>Source</em>, select <strong style="color:var(--gold)">"GitHub Actions"</strong>. This tells GitHub to accept deployments from your workflow file.</div>
+        <div class="code-inline">Settings → Pages → Source:<br/>GitHub Actions ✓</div>
+      </div>
+      <div class="fix-step">
+        <div class="fix-step-num">02</div>
+        <div class="fix-step-title">Fix Permissions</div>
+        <div class="fix-step-desc">Your <code style="font-family:'Courier Prime',monospace;color:var(--gold)">static.yml</code> must include the correct permissions block. Without <code style="font-family:'Courier Prime',monospace;color:var(--gold)">pages: write</code> and <code style="font-family:'Courier Prime',monospace;color:var(--gold)">id-token: write</code>, the deploy step will always fail.</div>
+        <div class="code-inline">permissions:<br/>&nbsp;&nbsp;pages: write<br/>&nbsp;&nbsp;id-token: write<br/>&nbsp;&nbsp;contents: read</div>
+      </div>
+      <div class="fix-step">
+        <div class="fix-step-num">03</div>
+        <div class="fix-step-title">Replace Your YAML</div>
+        <div class="fix-step-desc">Copy the recommended <code style="font-family:'Courier Prime',monospace;color:var(--gold)">static.yml</code> shown above into your <code style="font-family:'Courier Prime',monospace;color:var(--gold)">.github/workflows/</code> folder, commit it to <code style="font-family:'Courier Prime',monospace;color:var(--gold)">main</code>, and the next run should succeed.</div>
+        <div class="code-inline">git add .github/workflows/static.yml<br/>git commit -m "fix: pages deploy"<br/>git push origin main</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ORNAMENT -->
+<div class="ornament fade-up d6">
+  <div class="orn-line"></div>
+  <div class="orn-diamond"></div>
+  <div class="orn-text">End of Document</div>
+  <div class="orn-diamond"></div>
+  <div class="orn-line"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <svg viewBox="0 0 32 24" width="26" height="20" xmlns="http://www.w3.org/2000/svg" style="opacity:0.5">
+      <path d="M16 1 L19 7 L25 4 L22 10 L30 8 L26 15 L30 18 L2 18 L6 15 L2 8 L10 10 L7 4 L13 7 Z" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+      <rect x="2" y="20" width="28" height="1.5" fill="#c9a84c" opacity="0.4"/>
+    </svg>
+    <div>
+      <div class="footer-name">Joyal Varghese</div>
+      <div class="footer-sub">Robotics Project · GitHub Repository</div>
+    </div>
+  </div>
+  <div class="footer-right">
+    <p>Repository · JOYALVARGHESE07/Robotics</p>
+    <p>Workflow · .github/workflows/static.yml</p>
+    <p>Platform · GitHub Actions · GitHub Pages</p>
+  </div>
+</footer>
+
+</body>
+</html>

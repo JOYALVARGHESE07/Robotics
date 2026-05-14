@@ -3,27 +3,32 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drone Sim — Joyal Varghese</title>
+<title>Smart Eco-Friendly House — KS0576 · Joyal Varghese</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Bebas+Neue&family=DM+Sans:wght@200;300;400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --black:#08080a;
-  --black2:#0e0e12;
-  --black3:#14141a;
-  --silver-dark:#6b6b78;
-  --silver:#a8a8b8;
-  --silver-light:#d4d4e0;
-  --silver-bright:#ebebf2;
-  --white:#f5f5fa;
-  --gold:#c9a84c;
-  --gold-light:#e8c97a;
-  --gold-dim:#8a6a28;
-  --gold-glow:rgba(201,168,76,0.15);
-  --gold-border:rgba(201,168,76,0.3);
-  --arduino-teal:#00979d;
-  --arduino-teal-dim:rgba(0,151,157,0.12);
+  --black:#06100a;
+  --black2:#0b160e;
+  --black3:#101a12;
+  --silver-dark:#6b7870;
+  --silver:#a8b8b0;
+  --silver-light:#d4e0da;
+  --silver-bright:#ebf2ee;
+  --white:#f0f7f3;
+  --green:#3fb950;
+  --green-light:#7ee787;
+  --green-dim:#1a4a28;
+  --green-glow:rgba(63,185,80,0.14);
+  --green-border:rgba(63,185,80,0.28);
+  --amber:#c9a84c;
+  --amber-light:#e8c97a;
+  --amber-dim:#8a6a28;
+  --amber-glow:rgba(201,168,76,0.13);
+  --amber-border:rgba(201,168,76,0.28);
+  --teal:#00b4aa;
+  --teal-dim:rgba(0,180,170,0.12);
 }
 
 html{scroll-behavior:smooth}
@@ -33,55 +38,107 @@ body{
   font-family:'DM Sans',sans-serif;
   font-weight:300;
   overflow-x:hidden;
+  cursor:none;
 }
 
-/* GRAIN OVERLAY */
+/* CUSTOM CURSOR */
+#cursor{
+  position:fixed;width:12px;height:12px;border-radius:50%;
+  background:var(--green);pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:width .2s,height .2s,background .2s;
+  mix-blend-mode:screen;
+}
+#cursor-ring{
+  position:fixed;width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(63,185,80,0.5);pointer-events:none;z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:all .12s ease;
+}
+
+/* GRAIN */
 body::before{
   content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;
-  opacity:.35;
+  opacity:.3;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
 }
 
 /* KEYFRAMES */
 @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-@keyframes goldShimmer{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes scanLine{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
-@keyframes rotorSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes borderPulse{0%,100%{border-color:var(--gold-border)}50%{border-color:rgba(201,168,76,.6)}}
+@keyframes borderPulse{0%,100%{border-color:var(--green-border)}50%{border-color:rgba(63,185,80,.6)}}
+@keyframes leafSway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 var(--green-glow)}50%{box-shadow:0 0 30px 8px var(--green-glow)}}
+@keyframes dataFlow{0%{stroke-dashoffset:300}100%{stroke-dashoffset:0}}
 @keyframes counterUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes ledBlink{0%,90%,100%{opacity:1}91%,99%{opacity:.2}}
+@keyframes particleDrift{
+  0%{transform:translate(0,0) scale(1);opacity:.8}
+  50%{transform:translate(var(--dx),var(--dy)) scale(1.4);opacity:.4}
+  100%{transform:translate(0,0) scale(1);opacity:.8}
+}
+@keyframes shimmer{
+  0%{background-position:200% center}
+  100%{background-position:-200% center}
+}
+@keyframes rotate360{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+@keyframes typewriter{
+  from{width:0}to{width:100%}
+}
+@keyframes blink{
+  0%,100%{opacity:1}50%{opacity:0}
+}
+@keyframes ripple{
+  0%{transform:scale(1);opacity:.6}
+  100%{transform:scale(2.5);opacity:0}
+}
 
 .fu{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) forwards;opacity:0;}
 .d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}
 .d4{animation-delay:.35s}.d5{animation-delay:.5s}.d6{animation-delay:.65s}
+.d7{animation-delay:.8s}.d8{animation-delay:.95s}
 
-/* SCANLINE EFFECT */
+/* SCANLINE */
 .scanline{
-  position:fixed;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.04),transparent);
-  animation:scanLine 8s linear infinite;
+  position:fixed;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,transparent,rgba(63,185,80,0.05),transparent);
+  animation:scanLine 10s linear infinite;
   pointer-events:none;z-index:9997;
+}
+
+/* PARTICLES */
+.particle{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:1;
+  animation:particleDrift var(--dur) ease-in-out infinite;
+  animation-delay:var(--delay);
+  background:var(--green);opacity:0.2;
 }
 
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:500;
   height:64px;
-  background:rgba(8,8,10,0.88);
-  backdrop-filter:blur(24px) saturate(120%);
-  border-bottom:0.5px solid rgba(201,168,76,0.18);
+  background:rgba(6,16,10,0.9);
+  backdrop-filter:blur(28px) saturate(130%);
+  border-bottom:0.5px solid rgba(63,185,80,0.18);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 64px;
+  transition:border-color .4s;
 }
-.nav-logo{
-  display:flex;align-items:center;gap:14px;
-}
+nav:hover{border-bottom-color:rgba(63,185,80,0.4);}
+.nav-logo{display:flex;align-items:center;gap:14px;}
 .nav-logo-mark{
   width:32px;height:32px;
-  border:1px solid var(--gold-border);
+  border:1px solid var(--green-border);
   display:flex;align-items:center;justify-content:center;
+  transition:all .3s;
 }
-.nav-logo-mark svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.2;}
+.nav-logo-mark:hover{background:var(--green-glow);border-color:var(--green);}
+.nav-logo-mark svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:1.2;}
 .nav-name{
   font-family:'Playfair Display',serif;
   font-size:16px;font-weight:400;
@@ -92,18 +149,24 @@ nav{
   font-size:11px;letter-spacing:2px;text-transform:uppercase;
   color:var(--silver-dark);text-decoration:none;
   transition:color .25s;font-weight:400;
+  position:relative;
 }
-.nav-links a:hover{color:var(--gold);}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+  background:var(--green);transform:scaleX(0);transition:transform .3s;
+}
+.nav-links a:hover{color:var(--green);}
+.nav-links a:hover::after{transform:scaleX(1);}
 .nav-cta{
   display:flex;align-items:center;gap:10px;
-  border:1px solid var(--gold-border);
+  border:1px solid var(--green-border);
   padding:9px 22px;
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--gold);font-weight:500;text-decoration:none;
-  transition:all .25s;
+  color:var(--green);font-weight:500;text-decoration:none;
+  transition:all .3s;
 }
-.nav-cta:hover{background:var(--gold-glow);border-color:var(--gold);}
-.nav-cta svg{width:12px;height:12px;stroke:var(--gold);fill:none;stroke-width:2;}
+.nav-cta:hover{background:var(--green-glow);border-color:var(--green);transform:translateY(-1px);}
+.nav-cta svg{width:12px;height:12px;stroke:var(--green);fill:none;stroke-width:2;}
 
 /* ── HERO ── */
 .hero{
@@ -112,16 +175,16 @@ nav{
   align-items:center;
   padding:100px 64px 64px;
   position:relative;overflow:hidden;
-  background:radial-gradient(ellipse at 60% 40%,rgba(201,168,76,.04) 0%,transparent 60%),
-             radial-gradient(ellipse at 20% 80%,rgba(0,151,157,.03) 0%,transparent 50%);
+  background:
+    radial-gradient(ellipse at 60% 40%,rgba(63,185,80,.05) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 80%,rgba(0,180,170,.04) 0%,transparent 50%),
+    radial-gradient(ellipse at 90% 90%,rgba(201,168,76,.03) 0%,transparent 40%);
 }
-
-/* Grid lines background */
 .hero::before{
   content:'';position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);
+    linear-gradient(rgba(63,185,80,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(63,185,80,.05) 1px,transparent 1px);
   background-size:80px 80px;
   mask-image:radial-gradient(ellipse at center,black 20%,transparent 75%);
 }
@@ -131,21 +194,21 @@ nav{
   display:inline-flex;align-items:center;gap:12px;
   margin-bottom:28px;
 }
-.hero-overline-line{width:40px;height:1px;background:var(--gold);}
+.hero-overline-line{width:40px;height:1px;background:var(--green);}
 .hero-overline-text{
   font-size:10px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--gold);font-weight:500;
+  color:var(--green);font-weight:500;
 }
 .hero-h1{
   font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(72px,9vw,130px);
+  font-size:clamp(68px,9vw,128px);
   line-height:.92;letter-spacing:2px;
   color:var(--white);
   margin-bottom:4px;
 }
-.hero-h1 .gold-line{
+.hero-h1 .green-line{
   display:block;
-  background:linear-gradient(90deg,var(--gold-light),var(--gold),var(--gold-dim));
+  background:linear-gradient(90deg,var(--green-light),var(--green),var(--green-dim));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .hero-sub{
@@ -159,70 +222,113 @@ nav{
   font-size:15px;line-height:1.85;color:var(--silver-dark);
   max-width:440px;font-weight:300;margin-bottom:48px;
 }
-.hero-desc span{color:var(--arduino-teal);}
+.hero-desc span{color:var(--green);}
+.hero-desc span.amber{color:var(--amber);}
 
-.btn-gold{
+.btn-green{
   display:inline-flex;align-items:center;gap:12px;
-  background:linear-gradient(135deg,var(--gold-dim),var(--gold),var(--gold-dim));
+  background:linear-gradient(135deg,var(--green-dim),var(--green),var(--green-dim));
   background-size:200% 100%;
   color:var(--black);
   padding:15px 32px;
   font-size:10px;letter-spacing:4px;text-transform:uppercase;font-weight:600;
   text-decoration:none;
-  transition:background-position .4s;
+  transition:background-position .4s,transform .2s;
 }
-.btn-gold:hover{background-position:100% 0;}
-.btn-gold svg{width:14px;height:14px;stroke:var(--black);fill:none;stroke-width:2.5;}
+.btn-green:hover{background-position:100% 0;transform:translateY(-2px);}
+.btn-green svg{width:14px;height:14px;stroke:var(--black);fill:none;stroke-width:2.5;}
 .btn-outline{
   display:inline-flex;align-items:center;gap:12px;
-  border:1px solid rgba(168,168,184,.3);
+  border:1px solid rgba(168,184,176,.3);
   padding:15px 32px;
   font-size:10px;letter-spacing:4px;text-transform:uppercase;font-weight:500;
   color:var(--silver);text-decoration:none;
   transition:all .25s;margin-left:16px;
 }
-.btn-outline:hover{border-color:var(--silver);color:var(--white);}
+.btn-outline:hover{border-color:var(--silver);color:var(--white);transform:translateY(-2px);}
 
-/* HERO RIGHT — Canvas */
+/* HERO RIGHT */
 .hero-right{
   position:relative;z-index:2;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-#drone-canvas{
+#house-canvas{
   display:block;
   width:min(480px,44vw);
   height:min(480px,44vw);
+  animation:float 6s ease-in-out infinite;
 }
 .canvas-hint{
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--silver-dark);margin-top:12px;
+  color:var(--silver-dark);margin-top:16px;
   display:flex;align-items:center;gap:8px;
 }
-.canvas-hint::before,.canvas-hint::after{content:'';flex:1;height:1px;background:rgba(168,168,184,.15);}
+.canvas-hint::before,.canvas-hint::after{content:'';flex:1;height:1px;background:rgba(168,184,176,.15);}
 
-/* ── ARDUINO SECTION ── */
-.arduino-section{
+/* LIVE SENSOR OVERLAY */
+.sensor-overlay{
+  position:absolute;
+  top:20px;right:10px;
+  background:rgba(6,16,10,0.82);
+  border:1px solid var(--green-border);
+  border-radius:8px;
+  padding:14px 18px;
+  font-family:'Courier Prime',monospace;
+  font-size:11px;
+  color:var(--green);
+  line-height:2;
+  backdrop-filter:blur(8px);
+  animation:borderPulse 3s ease-in-out infinite;
+}
+.sensor-overlay .label{color:var(--silver-dark);font-size:10px;}
+.sensor-overlay .val{color:var(--green-light);font-weight:700;}
+.sensor-overlay .warn{color:var(--amber);}
+
+/* ── STATS ── */
+.stats-band{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  background:var(--black3);
+  border-top:0.5px solid rgba(255,255,255,.05);
+  border-bottom:0.5px solid rgba(255,255,255,.05);
+}
+.stat-cell{
+  padding:48px 24px;text-align:center;
+  border-right:0.5px solid rgba(255,255,255,.05);
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.stat-cell:hover{background:rgba(63,185,80,.03);}
+.stat-cell:last-child{border-right:none;}
+.stat-cell::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:40px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+}
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:52px;letter-spacing:2px;
+  color:var(--white);line-height:1;margin-bottom:8px;
+}
+.stat-unit{font-size:22px;color:var(--green);}
+.stat-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--silver-dark);}
+
+/* ── HARDWARE SECTION ── */
+.hardware-section{
   padding:100px 64px;
   display:grid;grid-template-columns:1fr 1fr;gap:80px;
   align-items:center;
   border-top:0.5px solid rgba(255,255,255,.05);
   position:relative;
 }
-.arduino-section::before{
+.hardware-section::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-border),transparent);
+  background:linear-gradient(90deg,transparent,var(--green-border),transparent);
 }
+#pcb-canvas{width:100%;max-width:440px;height:340px;display:block;}
 
-.arduino-visual{position:relative;}
-#chip-canvas{
-  width:100%;max-width:440px;height:340px;display:block;
-}
-
-.arduino-content .section-tag{
-  display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
-}
-.section-tag-line{width:32px;height:1px;background:var(--gold);}
-.section-tag-text{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);font-weight:500;}
+.section-tag{display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;}
+.section-tag-line{width:32px;height:1px;background:var(--green);}
+.section-tag-text{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--green);font-weight:500;}
 .section-h2{
   font-family:'Playfair Display',serif;
   font-size:clamp(32px,4vw,52px);
@@ -230,10 +336,9 @@ nav{
   line-height:1.1;letter-spacing:-.5px;
   margin-bottom:20px;
 }
-.section-h2 em{font-style:italic;color:var(--gold);}
+.section-h2 em{font-style:italic;color:var(--green);}
 .section-desc{font-size:15px;line-height:1.85;color:var(--silver-dark);font-weight:300;margin-bottom:36px;}
 
-/* SPEC TABLE */
 .spec-table{border:1px solid rgba(255,255,255,.06);overflow:hidden;}
 .spec-row{
   display:grid;grid-template-columns:1fr 1fr;
@@ -241,20 +346,17 @@ nav{
   transition:background .2s;
 }
 .spec-row:last-child{border-bottom:none;}
-.spec-row:hover{background:rgba(201,168,76,.03);}
+.spec-row:hover{background:rgba(63,185,80,.04);}
 .spec-key{
   padding:14px 20px;
   font-size:10px;letter-spacing:2px;text-transform:uppercase;
   color:var(--silver-dark);font-weight:500;
   border-right:0.5px solid rgba(255,255,255,.05);
 }
-.spec-val{
-  padding:14px 20px;
-  font-family:'Courier Prime',monospace;
-  font-size:13px;color:var(--silver-bright);
-}
-.spec-val.gold{color:var(--gold);}
-.spec-val.teal{color:var(--arduino-teal);}
+.spec-val{padding:14px 20px;font-family:'Courier Prime',monospace;font-size:13px;color:var(--silver-bright);}
+.spec-val.green{color:var(--green);}
+.spec-val.amber{color:var(--amber);}
+.spec-val.teal{color:var(--teal);}
 
 /* ── WOKWI SECTION ── */
 .wokwi-section{
@@ -265,15 +367,14 @@ nav{
 }
 .wokwi-section::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-border),transparent);
+  background:linear-gradient(90deg,transparent,var(--green-border),transparent);
 }
 .wokwi-section::after{
   content:'';position:absolute;right:-200px;top:-200px;
   width:600px;height:600px;
-  background:radial-gradient(circle,rgba(0,151,157,.06),transparent 60%);
+  background:radial-gradient(circle,rgba(63,185,80,.05),transparent 60%);
   pointer-events:none;
 }
-
 .wokwi-inner{
   display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;
   position:relative;z-index:1;
@@ -285,7 +386,7 @@ nav{
   color:var(--white);margin-bottom:16px;
 }
 .wokwi-title span{
-  background:linear-gradient(90deg,var(--gold-light),var(--gold));
+  background:linear-gradient(90deg,var(--green-light),var(--green));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .wokwi-desc{font-size:15px;line-height:1.85;color:var(--silver-dark);font-weight:300;margin-bottom:28px;}
@@ -297,35 +398,35 @@ nav{
   padding:7px 16px;
   font-size:10px;letter-spacing:2px;text-transform:uppercase;
   color:var(--silver);font-weight:500;
+  transition:all .25s;
 }
-.chip-tag.gold{border-color:var(--gold-border);color:var(--gold);}
-.chip-tag.teal{border-color:rgba(0,151,157,.4);color:var(--arduino-teal);}
+.chip-tag:hover{border-color:var(--green-border);color:var(--green);transform:translateY(-2px);}
+.chip-tag.green{border-color:var(--green-border);color:var(--green);}
+.chip-tag.amber{border-color:var(--amber-border);color:var(--amber);}
+.chip-tag.teal{border-color:rgba(0,180,170,.4);color:var(--teal);}
 
 /* TERMINAL */
-.terminal{
-  background:#050508;
-  border:1px solid rgba(255,255,255,.08);
-  overflow:hidden;
-}
+.terminal{background:#030907;border:1px solid rgba(255,255,255,.08);overflow:hidden;}
 .terminal-bar{
-  background:#0e0e14;
+  background:#0a140d;
   border-bottom:0.5px solid rgba(255,255,255,.08);
   padding:12px 16px;
   display:flex;align-items:center;gap:8px;
 }
 .t-dot{width:11px;height:11px;border-radius:50%;}
 .t-dot.r{background:#ff5f57;}.t-dot.y{background:#ffbd2e;}.t-dot.g{background:#28ca41;}
-.t-title{
-  flex:1;text-align:center;
-  font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.2);
-  text-transform:uppercase;
+.t-title{flex:1;text-align:center;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.2);text-transform:uppercase;}
+.terminal-body{padding:24px 28px;font-family:'Courier Prime',monospace;font-size:12.5px;line-height:2;}
+.tc{color:#6ab0ff;}.td{color:#3a5040;}.tg{color:#33ff88;}.tw{color:var(--silver-bright);}
+.tgreen{color:var(--green);}.tamber{color:var(--amber);}.twarn{color:#ff8855;}
+
+/* TYPEWRITER */
+.typewriter{
+  overflow:hidden;white-space:nowrap;
+  border-right:2px solid var(--green);
+  animation:typewriter 3s steps(40,end) 1s forwards, blink .75s step-end infinite;
+  width:0;
 }
-.terminal-body{
-  padding:24px 28px;
-  font-family:'Courier Prime',monospace;
-  font-size:12.5px;line-height:2;
-}
-.tc{color:#6ab0ff;}.td{color:#3a3a50;}.tg{color:#33ff88;}.tw{color:var(--silver-bright);}.tgold{color:var(--gold);}
 
 /* ── FEATURES ── */
 .features-section{
@@ -335,7 +436,7 @@ nav{
 }
 .features-section::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-border),transparent);
+  background:linear-gradient(90deg,transparent,var(--green-border),transparent);
 }
 .features-header{text-align:center;margin-bottom:72px;}
 .features-title{
@@ -345,7 +446,7 @@ nav{
   margin-bottom:12px;
 }
 .features-title span{
-  background:linear-gradient(90deg,var(--gold-light),var(--gold));
+  background:linear-gradient(90deg,var(--green-light),var(--green));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .features-sub{font-size:15px;color:var(--silver-dark);font-weight:300;max-width:480px;margin:0 auto;}
@@ -358,45 +459,36 @@ nav{
   background:var(--black);
   padding:44px 36px;
   position:relative;overflow:hidden;
-  transition:background .3s;
+  transition:background .3s,transform .3s;
 }
 .feat-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--gold-dim),var(--gold),transparent);
+  background:linear-gradient(90deg,var(--green-dim),var(--green),transparent);
   opacity:0;transition:opacity .3s;
 }
-.feat-card:hover{background:var(--black2);}
+.feat-card:hover{background:var(--black2);transform:translateY(-4px);}
 .feat-card:hover::before{opacity:1;}
 .feat-card::after{
   content:'';position:absolute;bottom:-40px;right:-40px;
   width:120px;height:120px;
-  background:radial-gradient(circle,var(--gold-glow),transparent 70%);
+  background:radial-gradient(circle,var(--green-glow),transparent 70%);
   opacity:0;transition:opacity .3s;
 }
 .feat-card:hover::after{opacity:1;}
-
-.feat-num{
-  font-family:'Courier Prime',monospace;
-  font-size:11px;color:var(--gold-dim);
-  margin-bottom:28px;letter-spacing:2px;
-}
+.feat-num{font-family:'Courier Prime',monospace;font-size:11px;color:var(--green-dim);margin-bottom:28px;letter-spacing:2px;}
 .feat-icon-wrap{
   width:48px;height:48px;
-  border:1px solid rgba(201,168,76,.2);
+  border:1px solid rgba(63,185,80,.2);
   display:flex;align-items:center;justify-content:center;
   margin-bottom:24px;
-  transition:border-color .3s;
+  transition:border-color .3s,transform .3s;
 }
-.feat-card:hover .feat-icon-wrap{border-color:var(--gold);}
-.feat-icon-wrap svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.3;}
-.feat-title{
-  font-family:'Playfair Display',serif;
-  font-size:20px;font-weight:400;
-  color:var(--white);margin-bottom:12px;letter-spacing:-.2px;
-}
+.feat-card:hover .feat-icon-wrap{border-color:var(--green);transform:rotate(5deg);}
+.feat-icon-wrap svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.3;}
+.feat-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--white);margin-bottom:12px;letter-spacing:-.2px;}
 .feat-desc{font-size:13px;line-height:1.85;color:var(--silver-dark);font-weight:300;}
 
-/* ── PINOUT SECTION ── */
+/* ── PINOUT ── */
 .pinout-section{
   padding:100px 64px;
   background:var(--black2);
@@ -405,7 +497,7 @@ nav{
 }
 .pinout-section::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(0,151,157,.4),transparent);
+  background:linear-gradient(90deg,transparent,rgba(63,185,80,.4),transparent);
 }
 .pinout-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
 .pinout-h2{
@@ -414,7 +506,7 @@ nav{
   font-weight:400;color:var(--white);
   line-height:1.15;margin-bottom:20px;
 }
-.pinout-h2 em{font-style:italic;color:var(--arduino-teal);}
+.pinout-h2 em{font-style:italic;color:var(--green);}
 .pinout-desc{font-size:15px;line-height:1.85;color:var(--silver-dark);font-weight:300;margin-bottom:36px;}
 
 .pin-table{width:100%;border-collapse:collapse;}
@@ -429,45 +521,57 @@ nav{
   font-family:'Courier Prime',monospace;
   font-size:12px;
   border-bottom:0.5px solid rgba(255,255,255,.04);
+  transition:background .15s;
 }
-.pin-table tr:hover td{background:rgba(255,255,255,.02);}
-.pin-num{color:var(--gold);}
+.pin-table tr:hover td{background:rgba(63,185,80,.03);}
+.pin-num{color:var(--green);}
 .pin-name{color:var(--white);}
 .pin-use{color:var(--silver-dark);}
-.pin-badge{
-  display:inline-block;
-  padding:3px 10px;font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:500;
-}
-.pin-badge.digital{background:rgba(0,151,157,.1);color:var(--arduino-teal);}
-.pin-badge.analog{background:rgba(201,168,76,.1);color:var(--gold);}
+.pin-badge{display:inline-block;padding:3px 10px;font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:500;}
+.pin-badge.digital{background:rgba(63,185,80,.1);color:var(--green);}
+.pin-badge.analog{background:rgba(201,168,76,.1);color:var(--amber);}
 .pin-badge.power{background:rgba(255,100,100,.1);color:#ff7070;}
-.pin-badge.i2c{background:rgba(100,100,255,.1);color:#8888ff;}
+.pin-badge.i2c{background:rgba(0,180,170,.1);color:var(--teal);}
 
-/* ── STATS BAND ── */
-.stats-band{
-  display:grid;grid-template-columns:repeat(5,1fr);
-  background:var(--black3);
+/* ── PROJECTS ── */
+.projects-section{
+  padding:100px 64px;
   border-top:0.5px solid rgba(255,255,255,.05);
-  border-bottom:0.5px solid rgba(255,255,255,.05);
+  position:relative;
 }
-.stat-cell{
-  padding:48px 24px;text-align:center;
-  border-right:0.5px solid rgba(255,255,255,.05);
+.projects-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green-border),transparent);
+}
+.projects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.project-card{
+  background:var(--black2);
+  border:1px solid rgba(255,255,255,.06);
+  padding:24px 28px;
+  display:flex;gap:20px;
+  transition:all .3s;
   position:relative;overflow:hidden;
 }
-.stat-cell:last-child{border-right:none;}
-.stat-cell::before{
-  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:40px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+.project-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--green-glow),transparent);
+  opacity:0;transition:opacity .3s;
 }
-.stat-num{
+.project-card:hover{border-color:var(--green-border);transform:translateY(-3px);}
+.project-card:hover::before{opacity:1;}
+.project-num{
   font-family:'Bebas Neue',sans-serif;
-  font-size:52px;letter-spacing:2px;
-  color:var(--white);line-height:1;margin-bottom:8px;
+  font-size:36px;color:var(--green);
+  line-height:1;flex-shrink:0;
+  opacity:.6;
 }
-.stat-unit{font-size:22px;color:var(--gold);}
-.stat-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--silver-dark);}
+.project-info h4{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--white);}
+.project-info p{font-size:13px;color:var(--silver-dark);line-height:1.6;}
+.project-tag{
+  font-family:'Courier Prime',monospace;font-size:10px;
+  color:var(--amber);letter-spacing:1px;
+  margin-top:8px;display:block;
+}
 
 /* ── FOOTER ── */
 footer{
@@ -475,36 +579,48 @@ footer{
   border-top:0.5px solid rgba(255,255,255,.06);
   padding:64px;
 }
+.footer-gold-line{height:1px;background:linear-gradient(90deg,transparent,var(--green-border),transparent);margin-bottom:40px;}
 .footer-top{
   display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;
   padding-bottom:48px;
   border-bottom:0.5px solid rgba(255,255,255,.05);
   margin-bottom:40px;
 }
-.footer-brand-name{
-  font-family:'Playfair Display',serif;
-  font-size:22px;font-weight:400;color:var(--white);
-  margin-bottom:8px;letter-spacing:.5px;
-}
+.footer-brand-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--white);margin-bottom:8px;letter-spacing:.5px;}
 .footer-brand-sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--silver-dark);}
-.footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:16px;}
+.footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:16px;}
 .footer-col p{font-size:12px;color:var(--silver-dark);line-height:2;font-family:'Courier Prime',monospace;}
 .footer-bottom{display:flex;justify-content:space-between;align-items:center;}
 .footer-bottom p{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:1px;}
-.footer-gold-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold-border),transparent);margin-bottom:40px;}
+.footer-bottom a{color:var(--green);text-decoration:none;}
+.footer-bottom a:hover{text-decoration:underline;}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* RIPPLE BUTTON EFFECT */
+.ripple-btn{position:relative;overflow:hidden;}
+.ripple-btn .ripple-circle{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  animation:ripple .6s ease-out forwards;
+}
 
 @media(max-width:1100px){
   nav{padding:0 32px;}
   .hero{grid-template-columns:1fr;padding:120px 32px 64px;text-align:center;}
-  #drone-canvas{width:min(360px,80vw);height:min(360px,80vw);}
+  #house-canvas{width:min(360px,80vw);height:min(360px,80vw);}
   .hero-desc{margin:0 auto 48px;}
-  .arduino-section,.wokwi-inner,.pinout-inner{grid-template-columns:1fr;gap:48px;}
-  .arduino-section,.wokwi-section,.features-section,.pinout-section{padding:72px 32px;}
+  .hardware-section,.wokwi-inner,.pinout-inner{grid-template-columns:1fr;gap:48px;}
+  .hardware-section,.wokwi-section,.features-section,.pinout-section,.projects-section{padding:72px 32px;}
   .stats-band{grid-template-columns:repeat(3,1fr);}
   .feat-grid{grid-template-columns:1fr 1fr;}
+  .projects-grid{grid-template-columns:1fr;}
   footer{padding:48px 32px;}
   .footer-top{grid-template-columns:1fr;}
   .footer-bottom{flex-direction:column;gap:12px;text-align:center;}
+  .sensor-overlay{top:10px;right:5px;font-size:10px;padding:10px 12px;}
 }
 @media(max-width:700px){
   .nav-links{display:none;}
@@ -515,23 +631,45 @@ footer{
 </head>
 <body>
 
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 <div class="scanline"></div>
+
+<!-- FLOATING PARTICLES -->
+<script>
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const size=Math.random()*4+1;
+    p.style.cssText=`
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}vw;top:${Math.random()*100}vh;
+      --dx:${(Math.random()-0.5)*60}px;
+      --dy:${(Math.random()-0.5)*60}px;
+      --dur:${4+Math.random()*6}s;
+      --delay:${Math.random()*4}s;
+      opacity:${Math.random()*0.15+0.05};
+    `;
+    document.body.appendChild(p);
+  }
+</script>
 
 <!-- NAV -->
 <nav>
   <div class="nav-logo">
     <div class="nav-logo-mark">
-      <svg viewBox="0 0 24 24"><path d="M12 2l4 7H8l4-7z"/><circle cx="12" cy="17" r="4"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     </div>
     <div class="nav-name">Joyal Varghese</div>
   </div>
   <ul class="nav-links">
-    <li><a href="#arduino">Arduino</a></li>
+    <li><a href="#hardware">Hardware</a></li>
     <li><a href="#simulation">Simulation</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#pinout">Pinout</a></li>
+    <li><a href="#projects">Projects</a></li>
   </ul>
-  <a class="nav-cta" href="https://wokwi.com/projects/460318666113414145" target="_blank">
+  <a class="nav-cta ripple-btn" href="https://wokwi.com/projects/463453944774474753" target="_blank">
     <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
     Launch Sim
   </a>
@@ -542,20 +680,21 @@ footer{
   <div class="hero-left">
     <div class="hero-overline fu d1">
       <span class="hero-overline-line"></span>
-      <span class="hero-overline-text">Engineering Portfolio · 2025</span>
+      <span class="hero-overline-text">Engineering Portfolio · KS0576 · 2025</span>
     </div>
     <h1 class="hero-h1 fu d2">
-      DRONE
-      <span class="gold-line">SYSTEM</span>
+      SMART
+      <span class="green-line">ECO HOUSE</span>
     </h1>
-    <p class="hero-sub fu d3">Quadcopter Simulation &amp; Control</p>
+    <p class="hero-sub fu d3">Automated Home · Arduino UNO</p>
     <p class="hero-desc fu d4">
-      Built on <span>Arduino Uno</span> — featuring PID flight stabilisation,
-      MPU-6050 gyroscope fusion, HC-SR04 altitude sensing, and real-time
-      ESC motor mixing. Simulated entirely in Wokwi.
+      Built on <span>Arduino UNO PLUS</span> — featuring
+      <span class="amber">auto-irrigation</span>, PIR motion detection,
+      solar UV sensing, I2C LCD dashboard, smart fan, and relay-controlled water pump.
+      Simulated live in Wokwi.
     </p>
     <div class="fu d5">
-      <a class="btn-gold" href="https://wokwi.com/projects/460318666113414145" target="_blank">
+      <a class="btn-green ripple-btn" href="https://wokwi.com/projects/463453944774474753" target="_blank">
         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Launch simulation
       </a>
@@ -564,59 +703,69 @@ footer{
   </div>
 
   <div class="hero-right fu d3">
-    <canvas id="drone-canvas"></canvas>
-    <p class="canvas-hint">Move cursor to control</p>
+    <div style="position:relative;">
+      <canvas id="house-canvas"></canvas>
+      <div class="sensor-overlay">
+        <div><span class="label">TEMP </span><span class="val" id="disp-temp">28°C</span></div>
+        <div><span class="label">HUMI </span><span class="val" id="disp-humi">52%</span></div>
+        <div><span class="label">SOIL </span><span class="warn" id="disp-soil">DRY ⚠</span></div>
+        <div><span class="label">ILL  </span><span class="val" id="disp-ill">865 lx</span></div>
+        <div><span class="label">UV   </span><span class="val" id="disp-uv">2</span></div>
+        <div><span class="label">PIR  </span><span class="val" id="disp-pir">clear</span></div>
+      </div>
+    </div>
+    <p class="canvas-hint">Live sensor simulation</p>
   </div>
 </section>
 
-<!-- STATS BAND -->
-<div class="stats-band fu d4">
-  <div class="stat-cell">
-    <div class="stat-num">4<span class="stat-unit">×</span></div>
-    <div class="stat-label">Motors</div>
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stat-cell reveal">
+    <div class="stat-num">11<span class="stat-unit">×</span></div>
+    <div class="stat-label">Sensors</div>
   </div>
-  <div class="stat-cell">
-    <div class="stat-num">50<span class="stat-unit">Hz</span></div>
-    <div class="stat-label">Loop rate</div>
+  <div class="stat-cell reveal">
+    <div class="stat-num">12<span class="stat-unit"> </span></div>
+    <div class="stat-label">Projects</div>
   </div>
-  <div class="stat-cell">
-    <div class="stat-num">3<span class="stat-unit">-axis</span></div>
-    <div class="stat-label">PID control</div>
+  <div class="stat-cell reveal">
+    <div class="stat-num">5<span class="stat-unit">V</span></div>
+    <div class="stat-label">Logic Level</div>
   </div>
-  <div class="stat-cell">
+  <div class="stat-cell reveal">
     <div class="stat-num">16<span class="stat-unit">MHz</span></div>
-    <div class="stat-label">Clock speed</div>
+    <div class="stat-label">Clock Speed</div>
   </div>
-  <div class="stat-cell">
-    <div class="stat-num">I<span class="stat-unit">2</span>C</div>
-    <div class="stat-label">Sensor bus</div>
+  <div class="stat-cell reveal">
+    <div class="stat-num">I<span class="stat-unit">²C</span></div>
+    <div class="stat-label">Sensor Bus</div>
   </div>
 </div>
 
-<!-- ARDUINO SECTION -->
-<section id="arduino" class="arduino-section fu d3">
-  <div class="arduino-visual">
-    <canvas id="chip-canvas"></canvas>
+<!-- HARDWARE SECTION -->
+<section id="hardware" class="hardware-section">
+  <div class="reveal">
+    <canvas id="pcb-canvas"></canvas>
   </div>
-  <div class="arduino-content">
+  <div class="reveal">
     <div class="section-tag">
       <span class="section-tag-line"></span>
       <span class="section-tag-text">Hardware Core</span>
     </div>
-    <h2 class="section-h2">Arduino Uno<br/><em>R3 Platform</em></h2>
+    <h2 class="section-h2">UNO PLUS<br/><em>KS0486 Board</em></h2>
     <p class="section-desc">
-      The ATmega328P microcontroller runs the full flight stack — sensor polling, PID computation, motor mixing, and safety logic — all within a 50 Hz real-time loop at 16 MHz.
+      The ATmega328P microcontroller manages all sensors, actuators, and the I2C LCD dashboard. Relay-triggered irrigation, PWM fan control, and PIR alarm run concurrently in the main loop.
     </p>
     <div class="spec-table">
-      <div class="spec-row"><div class="spec-key">MCU</div><div class="spec-val teal">ATmega328P</div></div>
-      <div class="spec-row"><div class="spec-key">Clock</div><div class="spec-val gold">16 MHz</div></div>
+      <div class="spec-row"><div class="spec-key">MCU</div><div class="spec-val teal">ATmega328P-AU</div></div>
+      <div class="spec-row"><div class="spec-key">Clock</div><div class="spec-val green">16 MHz</div></div>
       <div class="spec-row"><div class="spec-key">Flash</div><div class="spec-val">32 KB</div></div>
       <div class="spec-row"><div class="spec-key">SRAM</div><div class="spec-val">2 KB</div></div>
-      <div class="spec-row"><div class="spec-key">Digital I/O</div><div class="spec-val gold">14 pins</div></div>
-      <div class="spec-row"><div class="spec-key">Analog In</div><div class="spec-val">6 channels</div></div>
-      <div class="spec-row"><div class="spec-key">PWM Pins</div><div class="spec-val teal">6 pins (ESC control)</div></div>
+      <div class="spec-row"><div class="spec-key">Digital I/O</div><div class="spec-val green">14 pins</div></div>
+      <div class="spec-row"><div class="spec-key">Analog In</div><div class="spec-val">8 channels (A0–A7)</div></div>
+      <div class="spec-row"><div class="spec-key">PWM Pins</div><div class="spec-val amber">6 pins (Fan, Buzzer)</div></div>
       <div class="spec-row"><div class="spec-key">I2C Bus</div><div class="spec-val">SDA A4 · SCL A5</div></div>
-      <div class="spec-row"><div class="spec-key">Operating V</div><div class="spec-val gold">5V logic</div></div>
+      <div class="spec-row"><div class="spec-key">USB</div><div class="spec-val green">CP2102 USB-Serial</div></div>
       <div class="spec-row"><div class="spec-key">Simulator</div><div class="spec-val teal">Wokwi · Live</div></div>
     </div>
   </div>
@@ -625,54 +774,57 @@ footer{
 <!-- WOKWI SECTION -->
 <section id="simulation" class="wokwi-section">
   <div class="wokwi-inner">
-    <div class="fu d3">
+    <div class="reveal">
       <div class="section-tag" style="margin-bottom:20px;">
         <span class="section-tag-line"></span>
         <span class="section-tag-text">Live Simulation</span>
       </div>
-      <h2 class="wokwi-title">FLY IT<br/><span>NOW.</span></h2>
+      <h2 class="wokwi-title">RUN IT<br/><span>LIVE.</span></h2>
       <p class="wokwi-desc">
-        The complete flight controller runs live in Wokwi. ARM the drone, push the throttle potentiometer, and watch the PID loop keep it level with real sensor fusion data from the MPU-6050.
+        The complete smart home controller runs live in Wokwi. Adjust the soil sensor, trigger the PIR, and watch the relay-controlled water pump activate, the fan respond to temperature, and the LCD dashboard update in real time.
       </p>
       <div class="chip-tags">
-        <span class="chip-tag teal">MPU-6050</span>
-        <span class="chip-tag teal">HC-SR04</span>
-        <span class="chip-tag gold">4× ESC</span>
-        <span class="chip-tag gold">PID loop</span>
+        <span class="chip-tag teal">XHT11 Temp/Humi</span>
+        <span class="chip-tag teal">PIR Motion</span>
+        <span class="chip-tag green">Soil Sensor</span>
+        <span class="chip-tag green">Water Pump</span>
+        <span class="chip-tag amber">Solar UV</span>
+        <span class="chip-tag amber">Relay Module</span>
         <span class="chip-tag">I2C LCD</span>
-        <span class="chip-tag">ARM / DISARM</span>
-        <span class="chip-tag">Serial monitor</span>
+        <span class="chip-tag">LDR Photoresistor</span>
+        <span class="chip-tag">SK6812 RGB LED</span>
+        <span class="chip-tag">Passive Buzzer</span>
       </div>
-      <a class="btn-gold" href="https://wokwi.com/projects/460318666113414145" target="_blank" style="display:inline-flex;align-items:center;gap:12px;text-decoration:none;padding:15px 32px;font-size:10px;letter-spacing:4px;text-transform:uppercase;font-weight:600;color:var(--black);background:linear-gradient(135deg,var(--gold-dim),var(--gold),var(--gold-dim));background-size:200% 100%;">
+      <a class="btn-green ripple-btn" href="https://wokwi.com/projects/463453944774474753" target="_blank" style="display:inline-flex;align-items:center;gap:12px;text-decoration:none;padding:15px 32px;font-size:10px;letter-spacing:4px;text-transform:uppercase;font-weight:600;color:var(--black);background:linear-gradient(135deg,var(--green-dim),var(--green),var(--green-dim));background-size:200% 100%;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Launch drone simulation
+        Launch smart house simulation
       </a>
     </div>
 
-    <div class="terminal fu d4">
+    <div class="terminal reveal">
       <div class="terminal-bar">
         <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
         <div class="t-title">Arduino Serial Monitor · 9600 baud</div>
       </div>
-      <div class="terminal-body">
-        <span class="td">▶ Drone Sim v1.0 — ATmega328P</span><br/>
+      <div class="terminal-body" id="terminal-body">
+        <span class="td">▶ Smart Eco House v1.0 — ATmega328P</span><br/>
         <span class="td">Initializing I2C bus... OK</span><br/>
-        <span class="td">MPU-6050 detected at 0x68</span><br/>
-        <span class="td">HC-SR04 echo pin: D3</span><br/>
-        <span class="td">ESC pins: D9 D10 D11 D6</span><br/>
         <span class="td">LCD detected at 0x27</span><br/>
-        <span class="td">Calibrating gyro...</span><br/>
-        <span class="tgold">───────────────────────</span><br/>
-        <span class="tg">[ARMED]</span> <span class="tw">system ready</span><br/>
-        <span class="tgold">───────────────────────</span><br/>
-        Roll: <span class="tw">0.0°</span>  Pitch: <span class="tw">0.0°</span><br/>
-        Altitude: <span class="tg">3.98 m</span><br/>
-        Throttle: <span class="tw">62%</span><br/>
+        <span class="td">XHT11 on pin D10... OK</span><br/>
+        <span class="td">PIR sensor on pin D3...</span><br/>
+        <span class="td">Soil sensor on A2... OK</span><br/>
+        <span class="td">Relay (pump) on D7</span><br/>
+        <span class="td">UV sensor on A6</span><br/>
+        <span class="tgreen">───────────────────────</span><br/>
+        <span class="tg">[SYSTEM READY]</span> <span class="tw">all sensors live</span><br/>
+        <span class="tgreen">───────────────────────</span><br/>
+        Temp: <span class="tw">28°C</span>  Humi: <span class="tw">52%</span><br/>
+        Soil: <span class="tamber">DRY (312)</span> → <span class="tg">PUMP ON</span><br/>
+        Light: <span class="tw">865 lx</span>  UV: <span class="tw">2</span><br/>
         <span class="td">──────────────────────</span><br/>
-        FL:<span class="tw">1420</span> FR:<span class="tw">1418</span><br/>
-        RL:<span class="tw">1422</span> RR:<span class="tw">1416</span><br/>
-        <span class="td">PID·OK  IMU·OK  ALT·OK</span><br/>
-        <span class="tgold">Loop: 50Hz  dt: 20ms</span>
+        PIR: <span class="tw">clear</span>  Fan: <span class="tw">OFF</span><br/>
+        RGB: <span class="tw">green</span>  Buzz: <span class="tw">idle</span><br/>
+        <span class="tgreen">Loop: OK  I2C: OK  LCD: OK</span>
       </div>
     </div>
   </div>
@@ -680,134 +832,245 @@ footer{
 
 <!-- FEATURES -->
 <section id="features" class="features-section">
-  <div class="features-header fu d3">
+  <div class="features-header reveal">
     <div class="section-tag" style="justify-content:center;">
       <span class="section-tag-line"></span>
       <span class="section-tag-text">System Features</span>
       <span class="section-tag-line"></span>
     </div>
-    <h2 class="features-title">FLIGHT<br/><span>SYSTEMS</span></h2>
-    <p class="features-sub">Every subsystem engineered for precision — from sensor fusion to motor mixing.</p>
+    <h2 class="features-title">HOME<br/><span>SYSTEMS</span></h2>
+    <p class="features-sub">Every subsystem engineered for a truly automated eco-friendly smart home.</p>
   </div>
 
-  <div class="feat-grid fu d4">
+  <div class="feat-grid reveal">
     <div class="feat-card">
-      <div class="feat-num">01 / IMU</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg></div>
-      <div class="feat-title">IMU Sensor Fusion</div>
-      <div class="feat-desc">MPU-6050 gyroscope and accelerometer fused via complementary filter. Real-time roll and pitch at 50 Hz. I2C address 0x68 on pins A4/A5.</div>
+      <div class="feat-num">01 / ENV</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div>
+      <div class="feat-title">Temp & Humidity</div>
+      <div class="feat-desc">XHT11 (DHT11-compatible) on D10 reads temperature and humidity. Values displayed live on I2C LCD. Fan activates automatically above 30°C.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-num">02 / PID</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-      <div class="feat-title">PID Stabiliser</div>
-      <div class="feat-desc">Dual-axis PID controller with configurable Kp, Ki, Kd. Anti-windup integrator clamping. Runs every 20 ms for 50 Hz control authority.</div>
+      <div class="feat-num">02 / WATER</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div>
+      <div class="feat-title">Auto Irrigation</div>
+      <div class="feat-desc">Capacitive soil sensor on A2 triggers the 5V relay (D7) to activate the water pump when moisture falls below threshold. Stops automatically when moist.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-num">03 / ESC</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-      <div class="feat-title">Motor Mixing</div>
-      <div class="feat-desc">X-frame quadcopter mixing on digital pins D9, D10, D11, D6. PWM signals 1000–2000 µs via Arduino Servo library. Rotor directions alternated for yaw authority.</div>
+      <div class="feat-num">03 / LIGHT</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+      <div class="feat-title">Smart Lighting</div>
+      <div class="feat-desc">Photoresistor (LDR) on A1 enables auto-switching SK6812 RGB LED (D11). Illuminance reading shown on LCD. Smooth color transitions for ambience.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-num">04 / ALT</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-      <div class="feat-title">Altitude Sensing</div>
-      <div class="feat-desc">HC-SR04 ultrasonic on D2 (trigger) and D3 (echo). Median-filtered distance readings in metres. Max range 4 m with ±3 mm accuracy.</div>
+      <div class="feat-num">04 / PIR</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div class="feat-title">Motion Detection</div>
+      <div class="feat-desc">PIR passive infrared sensor on D3 detects intruders. Triggers passive buzzer (D9) alert tone and can activate RGB LED flash sequence for visual alarm.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-num">05 / LCD</div>
+      <div class="feat-num">05 / UV</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/></svg></div>
+      <div class="feat-title">Solar UV Sensing</div>
+      <div class="feat-desc">KS6032 UV sensor on A6 reads solar ultraviolet index. Displays safe/moderate/high labels on LCD. Integrated solar panel demonstrates renewable energy input.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">06 / LCD</div>
       <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-      <div class="feat-title">I2C LCD Display</div>
-      <div class="feat-desc">LiquidCrystal_I2C 16×2 at address 0x27. Shows ARM state, altitude, roll, pitch, and throttle. Refreshes every 200 ms to prevent I2C bus saturation.</div>
+      <div class="feat-title">LCD Dashboard</div>
+      <div class="feat-desc">I2C LCD1602 at address 0x27 shows all sensor readings simultaneously: temp, humidity, illuminance, UV index. Refreshes every second via I2C bus.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-num">06 / SAFETY</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div class="feat-title">ARM / DISARM</div>
-      <div class="feat-desc">Push-button on D4 with 50 ms debounce. Hard motor lock when disarmed. PID integrators zero on arm. LED indicator on D13 mirrors arm state.</div>
+      <div class="feat-num">07 / FAN</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 12c0-3-1.5-6-4-6 0 3 1 5 4 6zM12 12c3 0 6-1.5 6-4-3 0-5 1-6 4zM12 12c0 3 1.5 6 4 6 0-3-1-5-4-6zM12 12c-3 0-6 1.5-6 4 3 0 5-1 6-4z"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <div class="feat-title">PWM Fan Control</div>
+      <div class="feat-desc">Fan motor on D5 (PWM) ramps up based on temperature. Solar panel can power the fan demonstrating green energy integration. Speed proportional to heat.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-num">07 / THROTTLE</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-      <div class="feat-title">Throttle Control</div>
-      <div class="feat-desc">10 kΩ potentiometer on A0 maps 0–5V to 1000–2000 µs PWM range. Deadband at low throttle prevents inadvertent arm. Capped during PID saturation.</div>
+      <div class="feat-num">08 / RELAY</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 11-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
+      <div class="feat-title">5V Relay Module</div>
+      <div class="feat-desc">Single-channel 5V relay (KS6062) on D7 controls the DC water pump independently from the logic rail. Allows safe switching of higher-current loads.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-num">08 / SERIAL</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
-      <div class="feat-title">Serial Telemetry</div>
-      <div class="feat-desc">Full telemetry stream at 9600 baud via USB. Roll, pitch, altitude, throttle, and all four motor values logged every control cycle for debugging and tuning.</div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-num">09 / LOOP</div>
-      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
-      <div class="feat-title">Real-Time Loop</div>
-      <div class="feat-desc">Deterministic 50 Hz control loop using micros()-based timing. Sensor read, PID compute, motor write — all sequenced within the 20 ms window at 16 MHz.</div>
+      <div class="feat-num">09 / KEYPAD</div>
+      <div class="feat-icon-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+      <div class="feat-title">Five-Key Menu</div>
+      <div class="feat-desc">Five AD Key module on A0 provides analog-voltage keypad input for navigating LCD menu modes, adjusting thresholds, and selecting display pages without extra wiring.</div>
     </div>
   </div>
 </section>
 
 <!-- PINOUT SECTION -->
-<section id="pinout" class="pinout-section fu d3">
+<section id="pinout" class="pinout-section">
   <div class="pinout-inner">
-    <div>
+    <div class="reveal">
       <div class="section-tag" style="margin-bottom:20px;">
         <span class="section-tag-line"></span>
         <span class="section-tag-text">Hardware Pinout</span>
       </div>
-      <h2 class="pinout-h2">Arduino Uno<br/><em>Pin Mapping</em></h2>
-      <p class="pinout-desc">Every pin assignment used in the drone controller — from ESC PWM outputs to I2C sensor bus and safety inputs.</p>
+      <h2 class="pinout-h2">UNO PLUS<br/><em>Pin Mapping</em></h2>
+      <p class="pinout-desc">Every pin assignment for the smart house — from relay outputs to I2C sensor bus, analog sensors, and digital actuators.</p>
       <table class="pin-table">
         <thead>
-          <tr>
-            <th>Pin</th><th>Signal</th><th>Device</th><th>Type</th>
-          </tr>
+          <tr><th>Pin</th><th>Signal</th><th>Device</th><th>Type</th></tr>
         </thead>
         <tbody>
-          <tr><td class="pin-num">D2</td><td class="pin-name">TRIG</td><td class="pin-use">HC-SR04 Trigger</td><td><span class="pin-badge digital">Digital</span></td></tr>
-          <tr><td class="pin-num">D3</td><td class="pin-name">ECHO</td><td class="pin-use">HC-SR04 Echo</td><td><span class="pin-badge digital">Digital</span></td></tr>
-          <tr><td class="pin-num">D4</td><td class="pin-name">ARM_BTN</td><td class="pin-use">ARM/DISARM button</td><td><span class="pin-badge digital">Digital</span></td></tr>
-          <tr><td class="pin-num">D6</td><td class="pin-name">ESC_RR</td><td class="pin-use">Rear-right motor</td><td><span class="pin-badge analog">PWM</span></td></tr>
-          <tr><td class="pin-num">D9</td><td class="pin-name">ESC_FL</td><td class="pin-use">Front-left motor</td><td><span class="pin-badge analog">PWM</span></td></tr>
-          <tr><td class="pin-num">D10</td><td class="pin-name">ESC_FR</td><td class="pin-use">Front-right motor</td><td><span class="pin-badge analog">PWM</span></td></tr>
-          <tr><td class="pin-num">D11</td><td class="pin-name">ESC_RL</td><td class="pin-use">Rear-left motor</td><td><span class="pin-badge analog">PWM</span></td></tr>
-          <tr><td class="pin-num">D13</td><td class="pin-name">LED</td><td class="pin-use">ARM state indicator</td><td><span class="pin-badge digital">Digital</span></td></tr>
-          <tr><td class="pin-num">A0</td><td class="pin-name">THROTTLE</td><td class="pin-use">10kΩ potentiometer</td><td><span class="pin-badge analog">Analog</span></td></tr>
-          <tr><td class="pin-num">A4</td><td class="pin-name">SDA</td><td class="pin-use">MPU-6050 / LCD</td><td><span class="pin-badge i2c">I²C</span></td></tr>
-          <tr><td class="pin-num">A5</td><td class="pin-name">SCL</td><td class="pin-use">MPU-6050 / LCD</td><td><span class="pin-badge i2c">I²C</span></td></tr>
-          <tr><td class="pin-num">5V</td><td class="pin-name">VCC</td><td class="pin-use">Sensor power rail</td><td><span class="pin-badge power">Power</span></td></tr>
-          <tr><td class="pin-num">GND</td><td class="pin-name">GND</td><td class="pin-use">Common ground</td><td><span class="pin-badge power">Power</span></td></tr>
+          <tr><td class="pin-num">D3</td><td class="pin-name">PIR</td><td class="pin-use">PIR Motion Sensor</td><td><span class="pin-badge digital">Digital</span></td></tr>
+          <tr><td class="pin-num">D5</td><td class="pin-name">FAN</td><td class="pin-use">Fan Motor (PWM)</td><td><span class="pin-badge analog">PWM</span></td></tr>
+          <tr><td class="pin-num">D7</td><td class="pin-name">RELAY</td><td class="pin-use">Water Pump Relay</td><td><span class="pin-badge digital">Digital</span></td></tr>
+          <tr><td class="pin-num">D9</td><td class="pin-name">BUZZ</td><td class="pin-use">Passive Buzzer</td><td><span class="pin-badge analog">PWM</span></td></tr>
+          <tr><td class="pin-num">D10</td><td class="pin-name">DHT</td><td class="pin-use">XHT11 Temp/Humidity</td><td><span class="pin-badge digital">Digital</span></td></tr>
+          <tr><td class="pin-num">D11</td><td class="pin-name">RGB</td><td class="pin-use">SK6812 NeoPixel</td><td><span class="pin-badge analog">PWM</span></td></tr>
+          <tr><td class="pin-num">A0</td><td class="pin-name">KEYS</td><td class="pin-use">Five AD Key Module</td><td><span class="pin-badge analog">Analog</span></td></tr>
+          <tr><td class="pin-num">A1</td><td class="pin-name">LDR</td><td class="pin-use">Photoresistor (LDR)</td><td><span class="pin-badge analog">Analog</span></td></tr>
+          <tr><td class="pin-num">A2</td><td class="pin-name">SOIL</td><td class="pin-use">Soil Humidity Sensor</td><td><span class="pin-badge analog">Analog</span></td></tr>
+          <tr><td class="pin-num">A3</td><td class="pin-name">WLVL</td><td class="pin-use">Water Level Sensor</td><td><span class="pin-badge analog">Analog</span></td></tr>
+          <tr><td class="pin-num">A4</td><td class="pin-name">SDA</td><td class="pin-use">LCD I2C Data</td><td><span class="pin-badge i2c">I²C</span></td></tr>
+          <tr><td class="pin-num">A5</td><td class="pin-name">SCL</td><td class="pin-use">LCD I2C Clock</td><td><span class="pin-badge i2c">I²C</span></td></tr>
+          <tr><td class="pin-num">A6</td><td class="pin-name">UV</td><td class="pin-use">Solar UV Sensor</td><td><span class="pin-badge analog">Analog</span></td></tr>
+          <tr><td class="pin-num">5V</td><td class="pin-name">VCC</td><td class="pin-use">Sensor Power Rail</td><td><span class="pin-badge power">Power</span></td></tr>
+          <tr><td class="pin-num">GND</td><td class="pin-name">GND</td><td class="pin-use">Common Ground</td><td><span class="pin-badge power">Power</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div>
+    <div class="reveal">
       <div class="section-tag" style="margin-bottom:20px;">
         <span class="section-tag-line"></span>
         <span class="section-tag-text">Libraries Used</span>
       </div>
       <h2 class="pinout-h2" style="font-size:clamp(24px,2.8vw,36px);">Arduino<br/><em>Dependencies</em></h2>
-      <p class="pinout-desc">All libraries available in the Arduino IDE library manager and pre-loaded in the Wokwi simulation.</p>
+      <p class="pinout-desc">All libraries available in Arduino IDE Library Manager and pre-loaded in the Wokwi simulation.</p>
       <div class="spec-table">
         <div class="spec-row"><div class="spec-key">Wire.h</div><div class="spec-val teal">I2C communication</div></div>
-        <div class="spec-row"><div class="spec-key">Servo.h</div><div class="spec-val gold">ESC PWM signals</div></div>
-        <div class="spec-row"><div class="spec-key">LiquidCrystal_I2C</div><div class="spec-val">16×2 LCD driver</div></div>
-        <div class="spec-row"><div class="spec-key">MPU6050.h</div><div class="spec-val teal">Gyro / accel driver</div></div>
-        <div class="spec-row"><div class="spec-key">math.h</div><div class="spec-val">atan2, sqrt, PI</div></div>
+        <div class="spec-row"><div class="spec-key">LiquidCrystal_I2C</div><div class="spec-val green">16×2 LCD driver</div></div>
+        <div class="spec-row"><div class="spec-key">DHT.h</div><div class="spec-val amber">Temp/humidity sensor</div></div>
+        <div class="spec-row"><div class="spec-key">Adafruit_NeoPixel</div><div class="spec-val">SK6812 RGB LED</div></div>
+        <div class="spec-row"><div class="spec-key">Arduino.h</div><div class="spec-val teal">Core + tone() for buzzer</div></div>
       </div>
       <br/>
       <div class="section-tag" style="margin-bottom:16px;">
         <span class="section-tag-line"></span>
-        <span class="section-tag-text">PID Tuning Values</span>
+        <span class="section-tag-text">Automation Thresholds</span>
       </div>
       <div class="spec-table">
-        <div class="spec-row"><div class="spec-key">Kp (Roll)</div><div class="spec-val gold">1.80</div></div>
-        <div class="spec-row"><div class="spec-key">Ki (Roll)</div><div class="spec-val">0.05</div></div>
-        <div class="spec-row"><div class="spec-key">Kd (Roll)</div><div class="spec-val">0.35</div></div>
-        <div class="spec-row"><div class="spec-key">Kp (Pitch)</div><div class="spec-val gold">1.80</div></div>
-        <div class="spec-row"><div class="spec-key">Ki (Pitch)</div><div class="spec-val">0.05</div></div>
-        <div class="spec-row"><div class="spec-key">Kd (Pitch)</div><div class="spec-val">0.35</div></div>
-        <div class="spec-row"><div class="spec-key">Output clamp</div><div class="spec-val teal">±400 µs</div></div>
+        <div class="spec-row"><div class="spec-key">Soil dry</div><div class="spec-val amber">&lt; 400 (analog)</div></div>
+        <div class="spec-row"><div class="spec-key">Fan on temp</div><div class="spec-val green">&gt; 30°C</div></div>
+        <div class="spec-row"><div class="spec-key">Light auto-on</div><div class="spec-val">&lt; 300 lx</div></div>
+        <div class="spec-row"><div class="spec-key">UV moderate</div><div class="spec-val amber">&gt; 3 index</div></div>
+        <div class="spec-row"><div class="spec-key">UV high alert</div><div class="spec-val">color: #ff4444</div></div>
+        <div class="spec-row"><div class="spec-key">PIR buzz</div><div class="spec-val teal">1000 Hz · 300 ms</div></div>
+        <div class="spec-row"><div class="spec-key">Loop delay</div><div class="spec-val green">1000 ms</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="projects-section">
+  <div class="features-header reveal">
+    <div class="section-tag" style="justify-content:center;">
+      <span class="section-tag-line"></span>
+      <span class="section-tag-text">Tutorial Projects</span>
+      <span class="section-tag-line"></span>
+    </div>
+    <h2 class="features-title">12<br/><span>PROJECTS</span></h2>
+    <p class="features-sub">Step-by-step guided builds from basic sensor reading to a fully integrated smart eco home.</p>
+  </div>
+  <div class="projects-grid reveal">
+    <div class="project-card">
+      <div class="project-num">01</div>
+      <div class="project-info">
+        <h4>RGB LED Control</h4>
+        <p>Drive the SK6812 addressable LED — cycle colors, set brightness, create ambient light effects.</p>
+        <span class="project-tag">Digital I/O</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">02</div>
+      <div class="project-info">
+        <h4>PIR Motion Alarm</h4>
+        <p>Detect intruders with the PIR sensor and trigger the buzzer alarm sequence.</p>
+        <span class="project-tag">Sensor + Alert</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">03</div>
+      <div class="project-info">
+        <h4>Smart Lighting</h4>
+        <p>Use the LDR photoresistor to auto-switch LED on at dusk and off at dawn.</p>
+        <span class="project-tag">Analog Read</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">04</div>
+      <div class="project-info">
+        <h4>Temp & Humidity Monitor</h4>
+        <p>Read XHT11 data and display live TEMP / HUMI on the I2C LCD1602.</p>
+        <span class="project-tag">I2C + DHT</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">05</div>
+      <div class="project-info">
+        <h4>LCD Dashboard</h4>
+        <p>Show all sensor readings simultaneously: temp, humidity, illuminance, UV index.</p>
+        <span class="project-tag">I2C Display</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">06</div>
+      <div class="project-info">
+        <h4>Keypad Menu</h4>
+        <p>Navigate modes with the Five AD Key module using analog voltage identification.</p>
+        <span class="project-tag">ADC Input</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">07</div>
+      <div class="project-info">
+        <h4>Soil Dry Alert</h4>
+        <p>Read soil moisture; flash LED and sound buzzer when the plant needs watering.</p>
+        <span class="project-tag">Threshold Logic</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">08</div>
+      <div class="project-info">
+        <h4>Water Level Monitor</h4>
+        <p>Track reservoir water level and warn before the tank runs empty.</p>
+        <span class="project-tag">Analog Sensor</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">09</div>
+      <div class="project-info">
+        <h4>Auto Irrigation</h4>
+        <p>Relay-controlled pump activates when soil is dry. Stops automatically when moist.</p>
+        <span class="project-tag">Relay + Pump</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">10</div>
+      <div class="project-info">
+        <h4>UV Index Tracker</h4>
+        <p>Read the solar UV sensor and display the index with safe/moderate/high labels.</p>
+        <span class="project-tag">Analog UV</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">11</div>
+      <div class="project-info">
+        <h4>Solar Fan Controller</h4>
+        <p>Drive the fan when temperature exceeds threshold; powered by the solar panel demo.</p>
+        <span class="project-tag">PWM + Solar</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">12</div>
+      <div class="project-info">
+        <h4>Fully Integrated Eco House</h4>
+        <p>All sensors and actuators together: auto light, irrigation, fan, UV alerts, motion alarm.</p>
+        <span class="project-tag">Complete System</span>
       </div>
     </div>
   </div>
@@ -819,343 +1082,554 @@ footer{
   <div class="footer-top">
     <div>
       <div class="footer-brand-name">Joyal Varghese</div>
-      <div class="footer-brand-sub">Arduino · Drone Sim · Engineering</div>
+      <div class="footer-brand-sub">Arduino · Smart Eco House · Engineering</div>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Project</div>
       <p>Repository: JOYALVARGHESE07/Robotics</p>
-      <p>Simulation: Wokwi · Arduino Uno</p>
+      <p>Simulation: Wokwi · Arduino UNO</p>
       <p>Language: C++ / Arduino IDE</p>
+      <p>Kit: Keyestudio KS0576</p>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Hardware</div>
       <p>MCU: ATmega328P @ 16 MHz</p>
-      <p>IMU: MPU-6050 (I2C)</p>
-      <p>ALT: HC-SR04 Ultrasonic</p>
+      <p>IMU: XHT11 + PIR + LDR</p>
+      <p>ACT: Relay + Fan + Pump</p>
     </div>
   </div>
   <div class="footer-bottom">
     <p>© 2025 Joyal Varghese · Engineering Portfolio</p>
-    <p>wokwi.com/projects/460318666113414145</p>
+    <p><a href="https://wokwi.com/projects/463453944774474753" target="_blank">wokwi.com/projects/463453944774474753</a></p>
   </div>
 </footer>
 
 <script>
-/* ════ DRONE CANVAS ════ */
-(function(){
-  const cv = document.getElementById('drone-canvas');
-  const ctx = cv.getContext('2d');
-  const S = 500;
-  cv.width = S; cv.height = S;
-  const cx = S/2, cy = S/2;
-
-  let t=0, mx=cx, my=cy, tx=cx, ty=cy;
-  let dx=cx, dy=cy, vx=0, vy=0;
-
-  cv.addEventListener('mousemove', e=>{
-    const r=cv.getBoundingClientRect(), sc=S/r.width;
-    mx=(e.clientX-r.left)*sc; my=(e.clientY-r.top)*sc;
-    tx=mx; ty=my;
+/* ═══════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════ */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let cx2=0,cy2=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  cx2=e.clientX;cy2=e.clientY;
+  cur.style.left=cx2+'px';cur.style.top=cy2+'px';
+});
+function animRing(){
+  rx+=(cx2-rx)*0.12;ry+=(cy2-ry)*0.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}animRing();
+document.querySelectorAll('a,button,.feat-card,.project-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.width='20px';cur.style.height='20px';
+    ring.style.width='56px';ring.style.height='56px';
+    ring.style.borderColor='rgba(63,185,80,0.8)';
   });
-  cv.addEventListener('mouseleave',()=>{ tx=cx; ty=cy; });
-  cv.addEventListener('touchmove', e=>{
-    e.preventDefault();
-    const r=cv.getBoundingClientRect(), sc=S/r.width;
-    const t0=e.touches[0];
-    mx=(t0.clientX-r.left)*sc; my=(t0.clientY-r.top)*sc;
-    tx=mx; ty=my;
-  },{passive:false});
+  el.addEventListener('mouseleave',()=>{
+    cur.style.width='12px';cur.style.height='12px';
+    ring.style.width='36px';ring.style.height='36px';
+    ring.style.borderColor='rgba(63,185,80,0.5)';
+  });
+});
 
-  function lerp(a,b,f){return a+(b-a)*f;}
+/* ═══════════════════════════════════
+   RIPPLE EFFECT
+═══════════════════════════════════ */
+document.querySelectorAll('.ripple-btn').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    const r=btn.getBoundingClientRect();
+    const c=document.createElement('span');
+    c.className='ripple-circle';
+    const size=Math.max(btn.offsetWidth,btn.offsetHeight)*2;
+    c.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px;`;
+    btn.appendChild(c);
+    setTimeout(()=>c.remove(),700);
+  });
+});
 
-  function mkRotorGrad(x,y,r){
-    const g=ctx.createRadialGradient(x,y,0,x,y,r);
-    g.addColorStop(0,'rgba(200,200,210,0.25)');
-    g.addColorStop(.5,'rgba(168,168,184,0.15)');
-    g.addColorStop(1,'rgba(100,100,120,0)');
+/* ═══════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════ */
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'),i*80);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+revealEls.forEach(el=>obs.observe(el));
+
+/* ═══════════════════════════════════
+   LIVE SENSOR VALUES SIMULATION
+═══════════════════════════════════ */
+let simT=0;
+function updateSensors(){
+  simT+=0.02;
+  const temp=(26+3*Math.sin(simT*0.3)).toFixed(1);
+  const humi=(50+8*Math.sin(simT*0.2+1)).toFixed(0);
+  const soil=Math.sin(simT*0.15)>0.3?'WET ✓':'DRY ⚠';
+  const soilClass=soil.includes('WET')?'val':'warn';
+  const ill=(700+200*Math.abs(Math.sin(simT*0.1))).toFixed(0);
+  const uv=(1+2*Math.abs(Math.sin(simT*0.08))).toFixed(0);
+  const pir=Math.random()>0.96?'MOTION!':'clear';
+  document.getElementById('disp-temp').textContent=temp+'°C';
+  document.getElementById('disp-humi').textContent=humi+'%';
+  const soilEl=document.getElementById('disp-soil');
+  soilEl.textContent=soil;soilEl.className=soilClass;
+  document.getElementById('disp-ill').textContent=ill+' lx';
+  document.getElementById('disp-uv').textContent=uv;
+  const pirEl=document.getElementById('disp-pir');
+  pirEl.textContent=pir;
+  pirEl.style.color=pir==='MOTION!'?'#ff4444':'';
+}
+setInterval(updateSensors,1200);
+
+/* ═══════════════════════════════════
+   TERMINAL LIVE TICKER
+═══════════════════════════════════ */
+const termEl=document.getElementById('terminal-body');
+const lines=[
+  ()=>`Temp: <span class="tw">${(26+Math.random()*4).toFixed(1)}°C</span>  Humi: <span class="tw">${(48+Math.random()*10).toFixed(0)}%</span>`,
+  ()=>`Soil: <span class="${Math.random()>.5?'tg tamber':'twarn'}">${Math.random()>.5?'MOIST (512)':'DRY (298)'}</span> → <span class="${Math.random()>.5?'td':'tg'}">${Math.random()>.5?'PUMP OFF':'PUMP ON'}</span>`,
+  ()=>`UV: <span class="tw">${(Math.random()*4+1).toFixed(0)}</span>  Light: <span class="tw">${(600+Math.random()*400).toFixed(0)} lx</span>`,
+  ()=>`PIR: <span class="${Math.random()>.85?'twarn':'tg'}">${Math.random()>.85?'MOTION DETECTED':'clear'}</span>  Fan: <span class="tw">${Math.random()>.5?'ON 160':'OFF'}</span>`,
+  ()=>`<span class="tgreen">Loop OK  I2C OK  LCD OK</span>`,
+];
+let lineIdx=0;
+setInterval(()=>{
+  const div=document.createElement('div');
+  div.innerHTML=lines[lineIdx%lines.length]();
+  div.style.opacity='0';div.style.transition='opacity .5s';
+  termEl.appendChild(div);
+  setTimeout(()=>div.style.opacity='1',50);
+  if(termEl.children.length>22)termEl.removeChild(termEl.firstChild);
+  lineIdx++;
+},2000);
+
+/* ═══════════════════════════════════
+   HOUSE CANVAS
+═══════════════════════════════════ */
+(function(){
+  const cv=document.getElementById('house-canvas');
+  const ctx=cv.getContext('2d');
+  const S=500; cv.width=S; cv.height=S;
+  let t=0;
+
+  const GREEN='#3fb950', GREENL='#7ee787', AMBER='#c9a84c', TEAL='#00b4aa', SIL='#a8b8b0';
+
+  function grd(x1,y1,x2,y2,stops){
+    const g=ctx.createLinearGradient(x1,y1,x2,y2);
+    stops.forEach(([p,c])=>g.addColorStop(p,c));
+    return g;
+  }
+  function rgd(x,y,r0,r1,stops){
+    const g=ctx.createRadialGradient(x,y,r0,x,y,r1);
+    stops.forEach(([p,c])=>g.addColorStop(p,c));
     return g;
   }
 
-  function drawRotor(x,y,radius,phase,dir){
-    // Glow halo
-    ctx.beginPath();
-    ctx.arc(x,y,radius+10,0,Math.PI*2);
-    ctx.fillStyle=mkRotorGrad(x,y,radius+10);
+  function drawHouse(){
+    ctx.clearRect(0,0,S,S);
+    t+=0.012;
+
+    const cx=S/2, cy=S/2+20;
+    const hovY=Math.sin(t)*6;
+
+    /* ── AMBIENT GLOW ── */
+    ctx.save();
+    ctx.globalAlpha=0.18+0.06*Math.sin(t*0.7);
+    ctx.beginPath();ctx.ellipse(cx,cy+130,180,22,0,0,Math.PI*2);
+    ctx.fillStyle=rgd(cx,cy+130,0,180,[[0,'rgba(63,185,80,0.5)'],[1,'rgba(63,185,80,0)']]);
+    ctx.fill();ctx.restore();
+
+    ctx.save();ctx.translate(0,hovY);
+
+    /* ── GROUND / GRASS ── */
+    ctx.beginPath();ctx.ellipse(cx,cy+138,160,18,0,0,Math.PI*2);
+    ctx.fillStyle=rgd(cx,cy+138,0,160,[[0,'rgba(63,185,80,0.2)'],[1,'rgba(63,185,80,0)']]);
     ctx.fill();
 
-    // Ring
-    ctx.beginPath();
-    ctx.arc(x,y,radius,0,Math.PI*2);
-    ctx.strokeStyle='rgba(201,168,76,0.18)';
-    ctx.lineWidth=1;ctx.stroke();
-
-    // Inner ring
-    ctx.beginPath();
-    ctx.arc(x,y,radius*0.55,0,Math.PI*2);
-    ctx.strokeStyle='rgba(168,168,184,0.12)';
-    ctx.lineWidth=0.5;ctx.stroke();
-
-    // Blades
-    const a = phase + dir*t*0.14;
-    for(let i=0;i<2;i++){
-      const ang = a + i*Math.PI;
-      ctx.save();
-      ctx.translate(x,y);ctx.rotate(ang);
-      const bg=ctx.createLinearGradient(-radius,0,radius,0);
-      bg.addColorStop(0,'rgba(100,100,120,0.6)');
-      bg.addColorStop(.35,'rgba(180,180,195,0.9)');
-      bg.addColorStop(.5,'rgba(220,215,200,0.95)');
-      bg.addColorStop(.65,'rgba(180,180,195,0.9)');
-      bg.addColorStop(1,'rgba(100,100,120,0.6)');
-      ctx.beginPath();
-      ctx.ellipse(0,0,radius,radius*.12,0,0,Math.PI*2);
-      ctx.fillStyle=bg;ctx.fill();
-      ctx.restore();
-    }
-
-    // Hub
-    const hg=ctx.createRadialGradient(x-1,y-1,0,x,y,7);
-    hg.addColorStop(0,'#e8e0c8');hg.addColorStop(.5,'#c9a84c');hg.addColorStop(1,'#8a6a28');
-    ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);
-    ctx.fillStyle=hg;ctx.fill();
-  }
-
-  function drawArm(x1,y1,x2,y2){
-    const g=ctx.createLinearGradient(x1,y1,x2,y2);
-    g.addColorStop(0,'rgba(100,100,115,.7)');
-    g.addColorStop(.5,'rgba(200,200,215,.95)');
-    g.addColorStop(1,'rgba(100,100,115,.7)');
-    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
-    ctx.strokeStyle=g;ctx.lineWidth=6;ctx.lineCap='round';ctx.stroke();
-    // Highlight
-    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
-    ctx.strokeStyle='rgba(255,255,255,0.25)';ctx.lineWidth=1.5;ctx.stroke();
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,S,S);
-    t++;
-
-    const sp=0.045, dm=0.76;
-    vx=(vx+(tx-dx)*sp)*dm;
-    vy=(vy+(ty-dy)*sp)*dm;
-    dx+=vx; dy+=vy;
-
-    const hov=Math.sin(t*.022)*10;
-    const roll=(dx-cx)*.013;
-    const pitch=(dy-cy)*.010;
-    const px=dx, py=dy+hov;
-
-    const AL=100;
-    const rotors=[
-      {x:px-AL*Math.cos(Math.PI/4),y:py-AL*Math.sin(Math.PI/4),dir:1,ph:0},
-      {x:px+AL*Math.cos(Math.PI/4),y:py-AL*Math.sin(Math.PI/4),dir:-1,ph:Math.PI/4},
-      {x:px-AL*Math.cos(Math.PI/4),y:py+AL*Math.sin(Math.PI/4),dir:-1,ph:Math.PI/4},
-      {x:px+AL*Math.cos(Math.PI/4),y:py+AL*Math.sin(Math.PI/4),dir:1,ph:0},
-    ];
-
-    // Shadow
-    const sy=cy+195+Math.sin(t*.022)*8;
-    const sg=ctx.createRadialGradient(cx,sy,0,cx,sy,130);
-    sg.addColorStop(0,'rgba(201,168,76,0.12)');
-    sg.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.beginPath();ctx.ellipse(cx,sy,130,14,0,0,Math.PI*2);
-    ctx.fillStyle=sg;ctx.fill();
-
-    // Diagonal cross lines (carbon fiber look)
-    rotors.forEach(r=>{
-      drawArm(px,py,r.x,r.y);
-    });
-
-    // Body
-    ctx.save();ctx.translate(px,py);
-    // Body outer
-    const bg1=ctx.createRadialGradient(-6,-6,0,0,0,32);
-    bg1.addColorStop(0,'#2a2a35');bg1.addColorStop(.5,'#1a1a22');bg1.addColorStop(1,'#0e0e14');
-    ctx.beginPath();
-    ctx.roundRect(-28,-14,56,28,8);
-    ctx.fillStyle=bg1;ctx.fill();
-    ctx.strokeStyle='rgba(201,168,76,0.4)';ctx.lineWidth=1;ctx.stroke();
-
-    // Body top highlight
-    ctx.beginPath();ctx.roundRect(-22,-10,44,8,4);
-    ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fill();
-
-    // Gold stripe
-    ctx.beginPath();ctx.roundRect(-28,-2,56,4,0);
-    const stripe=ctx.createLinearGradient(-28,0,28,0);
-    stripe.addColorStop(0,'rgba(201,168,76,0)');
-    stripe.addColorStop(.3,'rgba(201,168,76,0.6)');
-    stripe.addColorStop(.7,'rgba(201,168,76,0.6)');
-    stripe.addColorStop(1,'rgba(201,168,76,0)');
-    ctx.fillStyle=stripe;ctx.fill();
-
-    // Arduino "UNO" text
-    ctx.font='bold 7px "Courier Prime",monospace';
-    ctx.fillStyle='rgba(0,151,157,0.7)';
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('UNO',0,0);
-
-    // LED
-    const ledOn=(t%60)<45;
-    ctx.beginPath();ctx.arc(18,-6,3.5,0,Math.PI*2);
-    ctx.fillStyle=ledOn?'#00979d':'rgba(0,151,157,0.2)';ctx.fill();
-    if(ledOn){
-      ctx.beginPath();ctx.arc(18,-6,7,0,Math.PI*2);
-      ctx.fillStyle='rgba(0,151,157,0.15)';ctx.fill();
-    }
-
-    // ARM LED
-    ctx.beginPath();ctx.arc(-18,-6,3.5,0,Math.PI*2);
-    const armPulse=0.5+0.5*Math.sin(t*.08);
-    ctx.fillStyle=`rgba(201,168,76,${0.4+armPulse*0.6})`;ctx.fill();
-
+    /* ── SOLAR PANEL (back-left) ── */
+    const solPulse=0.5+0.5*Math.sin(t*1.2);
+    ctx.save();ctx.translate(cx-130,cy-60);ctx.rotate(-0.2);
+    ctx.fillStyle=grd(0,-20,40,10,[[0,'#0a2a4a'],[0.5,'#1a4a7a'],[1,'#0a2a4a']]);
+    ctx.beginPath();ctx.roundRect(0,0,60,40,4);ctx.fill();
+    ctx.strokeStyle=`rgba(0,180,210,${0.3+solPulse*0.4})`;ctx.lineWidth=1;ctx.stroke();
+    // panel grid
+    ctx.strokeStyle='rgba(0,150,200,0.3)';ctx.lineWidth=0.5;
+    for(let i=1;i<3;i++){ctx.beginPath();ctx.moveTo(i*20,0);ctx.lineTo(i*20,40);ctx.stroke();}
+    for(let i=1;i<2;i++){ctx.beginPath();ctx.moveTo(0,i*20);ctx.lineTo(60,i*20);ctx.stroke();}
+    // sun glint
+    ctx.beginPath();ctx.arc(10+solPulse*5,8,3,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,220,100,${0.4+solPulse*0.4})`;ctx.fill();
     ctx.restore();
 
-    rotors.forEach((r,i)=>drawRotor(r.x,r.y,42,r.ph,r.dir));
+    /* ── MAIN HOUSE BODY ── */
+    const hx=cx-80,hy=cy-20,hw=160,hh=130;
+    const bodyGrd=grd(hx,hy,hx,hy+hh,[[0,'#1a2a1f'],[0.5,'#0f1a14'],[1,'#0a1210']]);
+    ctx.fillStyle=bodyGrd;
+    ctx.beginPath();ctx.roundRect(hx,hy,hw,hh,6);ctx.fill();
+    ctx.strokeStyle='rgba(63,185,80,0.25)';ctx.lineWidth=1;ctx.stroke();
 
-    // Motion trail
-    for(let i=0;i<6;i++){
-      const al=(i/6)*0.06;
-      ctx.beginPath();ctx.arc(px-vx*(i*2),py-vy*(i*2),2-i*.25,0,Math.PI*2);
-      ctx.fillStyle=`rgba(201,168,76,${al})`;ctx.fill();
+    /* HOUSE WALL TEXTURE */
+    ctx.save();ctx.beginPath();ctx.roundRect(hx,hy,hw,hh,6);ctx.clip();
+    ctx.strokeStyle='rgba(63,185,80,0.04)';ctx.lineWidth=1;
+    for(let y=hy;y<hy+hh;y+=14){ctx.beginPath();ctx.moveTo(hx,y);ctx.lineTo(hx+hw,y);ctx.stroke();}
+    ctx.restore();
+
+    /* ── ROOF ── */
+    const roofPulse=0.5+0.3*Math.sin(t*0.8+0.5);
+    ctx.beginPath();
+    ctx.moveTo(hx-12,hy);
+    ctx.lineTo(cx,cy-110);
+    ctx.lineTo(hx+hw+12,hy);
+    ctx.closePath();
+    ctx.fillStyle=grd(cx,cy-110,cx,hy,[[0,'#2a1a0a'],[0.4,'#1a1208'],[1,'#0d0d0a']]);
+    ctx.fill();
+    ctx.strokeStyle=`rgba(201,168,76,${0.2+roofPulse*0.2})`;ctx.lineWidth=1.5;ctx.stroke();
+
+    // Roof ridge line
+    ctx.beginPath();ctx.moveTo(cx-20,cy-110);ctx.lineTo(cx+20,cy-110);
+    ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1;ctx.stroke();
+
+    /* ── DOOR ── */
+    ctx.fillStyle='#0a1410';
+    ctx.beginPath();ctx.roundRect(cx-16,hy+70,32,58,4);ctx.fill();
+    ctx.strokeStyle='rgba(201,168,76,0.35)';ctx.lineWidth=1;ctx.stroke();
+    // Door knob
+    ctx.beginPath();ctx.arc(cx+10,hy+100,3,0,Math.PI*2);
+    ctx.fillStyle=AMBER;ctx.fill();
+
+    /* ── WINDOWS ── */
+    function drawWindow(wx,wy,ww,wh,glowColor,lit){
+      ctx.fillStyle='#050e08';
+      ctx.beginPath();ctx.roundRect(wx,wy,ww,wh,3);ctx.fill();
+      if(lit){
+        const lgrd=rgd(wx+ww/2,wy+wh/2,0,ww,
+          [[0,glowColor+'aa'],[1,glowColor+'00']]);
+        ctx.fillStyle=lgrd;ctx.fill();
+        ctx.shadowColor=glowColor;ctx.shadowBlur=12;
+      }
+      ctx.strokeStyle=lit?glowColor+'66':'rgba(168,184,176,0.15)';ctx.lineWidth=1;ctx.stroke();
+      ctx.shadowBlur=0;
+      // window cross
+      ctx.strokeStyle='rgba(168,184,176,0.1)';ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(wx+ww/2,wy);ctx.lineTo(wx+ww/2,wy+wh);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(wx,wy+wh/2);ctx.lineTo(wx+ww,wy+wh/2);ctx.stroke();
     }
 
-    requestAnimationFrame(draw);
+    // LDR light sensor decides window lit state
+    const winLit=Math.sin(t*0.4)>-0.2;
+    drawWindow(hx+12,hy+20,40,35,GREEN,winLit);
+    drawWindow(hx+hw-52,hy+20,40,35,AMBER,true);
+
+    /* ── PIR SENSOR (side mount) ── */
+    const pirActive=Math.sin(t*0.9+2)>0.7;
+    ctx.fillStyle='#0e1a12';
+    ctx.beginPath();ctx.roundRect(hx+hw,hy+50,18,18,3);ctx.fill();
+    ctx.strokeStyle=pirActive?'rgba(255,80,80,0.8)':'rgba(63,185,80,0.3)';ctx.lineWidth=1;ctx.stroke();
+    // PIR dome
+    ctx.beginPath();ctx.arc(hx+hw+9,hy+59,6,0,Math.PI*2);
+    ctx.fillStyle=pirActive?'rgba(255,80,80,0.6)':'rgba(63,185,80,0.25)';ctx.fill();
+    if(pirActive){
+      ctx.beginPath();ctx.arc(hx+hw+9,hy+59,14,0,Math.PI*2);
+      ctx.strokeStyle='rgba(255,80,80,0.3)';ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.font='7px Courier Prime';ctx.fillStyle='rgba(168,184,176,0.4)';
+    ctx.textAlign='center';ctx.fillText('PIR',hx+hw+9,hy+76);
+
+    /* ── SOIL SENSOR + PLANT ── */
+    const soilMoist=Math.sin(t*0.5)>0.2;
+    // Plant pot
+    ctx.fillStyle='#1a2a1f';
+    ctx.beginPath();ctx.roundRect(hx-50,hy+80,28,40,4);ctx.fill();
+    ctx.strokeStyle='rgba(63,185,80,0.2)';ctx.lineWidth=1;ctx.stroke();
+    // Soil bar
+    const soilFill=soilMoist?0.7:0.25;
+    ctx.fillStyle=soilMoist?'rgba(63,185,80,0.4)':'rgba(201,168,76,0.5)';
+    ctx.beginPath();ctx.roundRect(hx-48,hy+80+40*(1-soilFill),24,40*soilFill,3);ctx.fill();
+    // Plant stem + leaves
+    ctx.strokeStyle=GREEN;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(hx-36,hy+80);ctx.lineTo(hx-36,hy+55);ctx.stroke();
+    // Leaf 1
+    ctx.save();ctx.translate(hx-36,hy+68);ctx.rotate(-0.4+0.1*Math.sin(t));
+    ctx.fillStyle=grd(0,0,20,0,[[0,GREEN],[1,'transparent']]);
+    ctx.beginPath();ctx.ellipse(12,0,16,6,0,0,Math.PI*2);ctx.fill();ctx.restore();
+    // Leaf 2
+    ctx.save();ctx.translate(hx-36,hy+62);ctx.rotate(0.5-0.1*Math.sin(t));
+    ctx.fillStyle=grd(0,0,-20,0,[[0,GREENL],[1,'transparent']]);
+    ctx.beginPath();ctx.ellipse(-12,0,14,5,0,0,Math.PI*2);ctx.fill();ctx.restore();
+
+    /* WATER PUMP pipe (when dry→pump on) */
+    if(!soilMoist){
+      const dropY=((t*30)%60)+hy+40;
+      ctx.beginPath();ctx.arc(hx-28,dropY,2.5,0,Math.PI*2);
+      ctx.fillStyle='rgba(100,180,255,0.7)';ctx.fill();
+    }
+
+    /* ── LCD DISPLAY (front of house) ── */
+    const lcdX=cx-30,lcdY=hy+28,lcdW=60,lcdH=32;
+    ctx.fillStyle='#020e06';
+    ctx.beginPath();ctx.roundRect(lcdX,lcdY,lcdW,lcdH,3);ctx.fill();
+    ctx.strokeStyle='rgba(63,185,80,0.5)';ctx.lineWidth=1;ctx.stroke();
+    // LCD text lines
+    ctx.font='bold 6.5px "Courier Prime",monospace';ctx.fillStyle=GREENL;ctx.textAlign='left';
+    const tempDisp=`T:${(26+2*Math.sin(t*0.3)).toFixed(0)}C H:${(50+5*Math.sin(t*0.2)).toFixed(0)}%`;
+    const illDisp=`L:${(700+200*Math.abs(Math.sin(t*0.1))).toFixed(0)} UV:${(1+Math.abs(Math.sin(t*0.08))*2).toFixed(0)}`;
+    ctx.fillText(tempDisp,lcdX+4,lcdY+12);
+    ctx.fillStyle='rgba(126,231,135,0.6)';
+    ctx.fillText(illDisp,lcdX+4,lcdY+24);
+    // LCD cursor blink
+    if(Math.floor(t*2)%2===0){
+      ctx.fillStyle=GREEN;ctx.fillRect(lcdX+lcdW-8,lcdY+20,5,2);
+    }
+
+    /* ── RGB LED ── */
+    const hue=(t*40)%360;
+    const rgbX=cx+60,rgbY=hy-8;
+    ctx.beginPath();ctx.arc(rgbX,rgbY,7,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${hue},80%,60%,0.9)`;ctx.fill();
+    ctx.beginPath();ctx.arc(rgbX,rgbY,14,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${hue},80%,60%,0.15)`;ctx.fill();
+
+    /* ── SOLAR UV SENSOR ── */
+    const uvX=cx+40,uvY=cy-90;
+    ctx.beginPath();ctx.arc(uvX,uvY,10,0,Math.PI*2);
+    ctx.fillStyle=grd(uvX-8,uvY-8,uvX+8,uvY+8,[[0,'#ffe060'],[1,'#ff8800']]);
+    ctx.fill();
+    ctx.strokeStyle='rgba(255,200,50,0.5)';ctx.lineWidth=1;ctx.stroke();
+    // UV rays
+    for(let r=0;r<6;r++){
+      const ang=(r/6)*Math.PI*2+t*0.5;
+      ctx.beginPath();
+      ctx.moveTo(uvX+Math.cos(ang)*12,uvY+Math.sin(ang)*12);
+      ctx.lineTo(uvX+Math.cos(ang)*18,uvY+Math.sin(ang)*18);
+      ctx.strokeStyle=`rgba(255,200,50,${0.3+0.3*Math.sin(t*1.5+r)})`;
+      ctx.lineWidth=1.5;ctx.stroke();
+    }
+    ctx.font='7px Courier Prime';ctx.fillStyle='rgba(255,200,50,0.5)';
+    ctx.textAlign='center';ctx.fillText('UV',uvX,uvY+24);
+
+    /* ── FAN ── */
+    const fanX=hx+hw-18,fanY=hy+65;
+    const fanSpeed=Math.sin(t*0.3)>0?t*4:0;
+    ctx.save();ctx.translate(fanX,fanY);
+    for(let b=0;b<3;b++){
+      ctx.save();ctx.rotate(fanSpeed+b*(Math.PI*2/3));
+      ctx.beginPath();ctx.ellipse(0,-12,5,12,0,0,Math.PI*2);
+      ctx.fillStyle='rgba(168,184,176,0.3)';ctx.fill();
+      ctx.restore();
+    }
+    ctx.beginPath();ctx.arc(0,0,4,0,Math.PI*2);
+    ctx.fillStyle='#2a2a35';ctx.fill();
+    ctx.strokeStyle='rgba(168,184,176,0.4)';ctx.lineWidth=1;ctx.stroke();
+    ctx.restore();
+    ctx.font='7px Courier Prime';ctx.fillStyle='rgba(168,184,176,0.4)';
+    ctx.textAlign='center';ctx.fillText('FAN',fanX,fanY+20);
+
+    /* ── BUZZER ── */
+    const buzzX=hx+hw+8,buzzY=hy+30;
+    const buzzA=pirActive?0.5+0.5*Math.sin(t*20):0.2;
+    ctx.beginPath();ctx.arc(buzzX,buzzY,8,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,120,50,${buzzA*0.5})`;ctx.fill();
+    ctx.strokeStyle=`rgba(255,120,50,${buzzA})`;ctx.lineWidth=1;ctx.stroke();
+    if(pirActive){
+      for(let r=1;r<3;r++){
+        ctx.beginPath();ctx.arc(buzzX,buzzY,8+r*8,0,Math.PI*2);
+        ctx.strokeStyle=`rgba(255,80,80,${0.3/r*Math.abs(Math.sin(t*12))})`;
+        ctx.lineWidth=1;ctx.stroke();
+      }
+    }
+    ctx.font='7px Courier Prime';ctx.fillStyle='rgba(255,120,50,0.4)';
+    ctx.textAlign='center';ctx.fillText('BUZZ',buzzX,buzzY+18);
+
+    /* ── ANTENNA / CHIMNEY ── */
+    ctx.strokeStyle='rgba(168,184,176,0.3)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx-10,cy-115);ctx.lineTo(cx-10,cy-142);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-18,cy-142);ctx.lineTo(cx-2,cy-142);ctx.stroke();
+    const sigPulse=0.5+0.5*Math.sin(t*3);
+    for(let r=1;r<3;r++){
+      ctx.beginPath();
+      ctx.arc(cx-10,cy-142,r*7,Math.PI+0.3,Math.PI*2-0.3);
+      ctx.strokeStyle=`rgba(63,185,80,${sigPulse*0.4/r})`;
+      ctx.lineWidth=1;ctx.stroke();
+    }
+
+    /* ── WATER LEVEL INDICATOR ── */
+    const wlX=hx+hw+32,wlY=hy+50;
+    ctx.fillStyle='#0a1410';
+    ctx.beginPath();ctx.roundRect(wlX,wlY,14,50,3);ctx.fill();
+    ctx.strokeStyle='rgba(100,180,255,0.3)';ctx.lineWidth=1;ctx.stroke();
+    const wl=0.3+0.5*Math.abs(Math.sin(t*0.3));
+    ctx.fillStyle=grd(wlX,wlY,wlX,wlY+50,[[0,'rgba(100,180,255,0.7)'],[1,'rgba(50,120,200,0.4)']]);
+    ctx.beginPath();ctx.roundRect(wlX+1,wlY+50*(1-wl),12,50*wl,2);ctx.fill();
+    ctx.font='7px Courier Prime';ctx.fillStyle='rgba(100,180,255,0.5)';
+    ctx.textAlign='center';ctx.fillText('H₂O',wlX+7,wlY+62);
+
+    ctx.restore(); // end hover translate
+
+    /* ── ANIMATED DATA CONNECTIONS ── */
+    const connPairs=[
+      {from:[cx-36,cy-60+hovY],to:[S/2+100,S/2-50],col:GREEN},
+      {from:[cx+80,cy-20+hovY],to:[S/2+120,S/2+10],col:AMBER},
+      {from:[cx-80,cy+60+hovY],to:[S/2-120,S/2+60],col:TEAL},
+    ];
+    connPairs.forEach((cp,i)=>{
+      const prog=((t*0.6+i*0.4)%1);
+      const dotX=cp.from[0]+(cp.to[0]-cp.from[0])*prog;
+      const dotY=cp.from[1]+(cp.to[1]-cp.from[1])*prog;
+      ctx.setLineDash([4,12]);ctx.lineDashOffset=-t*8;
+      ctx.beginPath();ctx.moveTo(cp.from[0],cp.from[1]);ctx.lineTo(cp.to[0],cp.to[1]);
+      ctx.strokeStyle=cp.col+'30';ctx.lineWidth=1;ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath();ctx.arc(dotX,dotY,3,0,Math.PI*2);
+      ctx.fillStyle=cp.col;ctx.globalAlpha=0.7;ctx.fill();ctx.globalAlpha=1;
+    });
   }
-  draw();
+
+  function loop(){drawHouse();requestAnimationFrame(loop);}
+  loop();
 })();
 
-/* ════ CHIP CANVAS ════ */
+/* ═══════════════════════════════════
+   PCB CANVAS (Arduino board)
+═══════════════════════════════════ */
 (function(){
-  const cv=document.getElementById('chip-canvas');
+  const cv=document.getElementById('pcb-canvas');
   if(!cv)return;
   const ctx=cv.getContext('2d');
-  const W=440,H=340;
-  cv.width=W;cv.height=H;
+  const W=440,H=340;cv.width=W;cv.height=H;
   let t=0;
+  const GREEN='#3fb950',AMBER='#c9a84c',TEAL='#00b4aa',SIL='#a8b8b0';
 
-  const GOLD='#c9a84c', TEAL='#00979d', SIL='#a8a8b8';
-
-  function drawChip(){
-    ctx.clearRect(0,0,W,H);
-    t++;
-
-    // Board background (dark green PCB)
+  function drawPCB(){
+    ctx.clearRect(0,0,W,H);t++;
     const bx=80,by=40,bw=280,bh=260;
-    ctx.fillStyle='#0a1a0e';
-    ctx.strokeStyle=`rgba(0,151,157,0.3)`;
-    ctx.lineWidth=1.5;
+
+    // Board background
+    ctx.fillStyle='#071409';
+    ctx.strokeStyle='rgba(63,185,80,0.25)';ctx.lineWidth=1.5;
     ctx.beginPath();ctx.roundRect(bx,by,bw,bh,8);ctx.fill();ctx.stroke();
 
-    // PCB grid pattern
-    ctx.save();
-    ctx.beginPath();ctx.roundRect(bx,by,bw,bh,8);ctx.clip();
-    ctx.strokeStyle='rgba(0,80,40,0.4)';ctx.lineWidth=0.5;
+    // PCB grid
+    ctx.save();ctx.beginPath();ctx.roundRect(bx,by,bw,bh,8);ctx.clip();
+    ctx.strokeStyle='rgba(20,60,30,0.5)';ctx.lineWidth=0.5;
     for(let x=bx;x<bx+bw;x+=20){ctx.beginPath();ctx.moveTo(x,by);ctx.lineTo(x,by+bh);ctx.stroke();}
     for(let y=by;y<by+bh;y+=20){ctx.beginPath();ctx.moveTo(bx,y);ctx.lineTo(bx+bw,y);ctx.stroke();}
     ctx.restore();
 
-    // Arduino label
-    ctx.font='bold 18px "Courier Prime",monospace';
+    // Board label
+    ctx.font='bold 14px "Courier Prime",monospace';
     ctx.fillStyle=TEAL;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('ARDUINO',bx+bw/2,by+28);
-    ctx.font='bold 28px "Courier Prime",monospace';
-    ctx.fillStyle='rgba(255,255,255,0.85)';
-    ctx.fillText('UNO',bx+bw/2,by+56);
-    ctx.font='9px "Courier Prime",monospace';
-    ctx.fillStyle='rgba(0,151,157,0.5)';
-    ctx.fillText('ATmega328P · 16MHz · 32KB Flash',bx+bw/2,by+76);
+    ctx.fillText('KEYESTUDIO',bx+bw/2,by+22);
+    ctx.font='bold 24px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(255,255,255,0.88)';
+    ctx.fillText('UNO PLUS',bx+bw/2,by+48);
+    ctx.font='8px "Courier Prime",monospace';
+    ctx.fillStyle='rgba(63,185,80,0.5)';
+    ctx.fillText('KS0486 · ATmega328P · 16MHz',bx+bw/2,by+66);
 
     // MCU chip
-    const mx=bx+90,my=by+100,mw=100,mh=80;
-    ctx.fillStyle='#1a1a22';ctx.strokeStyle=GOLD;ctx.lineWidth=1;
+    const mx=bx+92,my=by+96,mw=96,mh=76;
+    ctx.fillStyle='#12180e';ctx.strokeStyle=GREEN;ctx.lineWidth=0.8;
     ctx.beginPath();ctx.roundRect(mx,my,mw,mh,4);ctx.fill();ctx.stroke();
-    ctx.font='8px "Courier Prime",monospace';ctx.fillStyle=SIL;ctx.textAlign='center';
-    ctx.fillText('ATmega',mx+mw/2,my+mh/2-6);
-    ctx.fillText('328P',mx+mw/2,my+mh/2+6);
+    ctx.font='7.5px "Courier Prime",monospace';ctx.fillStyle=SIL;ctx.textAlign='center';
+    ctx.fillText('ATmega',mx+mw/2,my+mh/2-6);ctx.fillText('328P-AU',mx+mw/2,my+mh/2+6);
 
-    // MCU pins animation
-    const pinPulse=0.5+0.5*Math.sin(t*.05);
+    // MCU pins with animation
+    const pp=0.5+0.5*Math.sin(t*.05);
     for(let i=0;i<6;i++){
-      const py2=my+10+i*12;
-      ctx.fillStyle=`rgba(201,168,76,${0.3+pinPulse*.4})`;
-      ctx.fillRect(mx-12,py2,10,4);
-      ctx.fillRect(mx+mw+2,py2,10,4);
+      const py=my+10+i*11;
+      ctx.fillStyle=`rgba(63,185,80,${0.25+pp*.4})`;
+      ctx.fillRect(mx-11,py,9,4);ctx.fillRect(mx+mw+2,py,9,4);
     }
 
     // USB port
-    ctx.fillStyle='#333340';ctx.strokeStyle='rgba(201,168,76,0.5)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.roundRect(bx-2,by+100,16,30,3);ctx.fill();ctx.stroke();
-    ctx.font='7px "Courier Prime",monospace';ctx.fillStyle=GOLD;ctx.textAlign='center';
-    ctx.fillText('USB',bx+7,by+150);
+    ctx.fillStyle='#2a2a32';ctx.strokeStyle='rgba(63,185,80,0.45)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(bx-2,by+96,16,28,3);ctx.fill();ctx.stroke();
+    ctx.font='6.5px "Courier Prime",monospace';ctx.fillStyle=GREEN;ctx.textAlign='center';
+    ctx.fillText('USB',bx+7,by+140);
 
     // Power jack
-    ctx.beginPath();ctx.arc(bx+30,by+bh-20,12,0,Math.PI*2);
-    ctx.fillStyle='#222';ctx.fill();ctx.strokeStyle=SIL;ctx.lineWidth=1;ctx.stroke();
-    ctx.beginPath();ctx.arc(bx+30,by+bh-20,5,0,Math.PI*2);
-    ctx.fillStyle='#111';ctx.fill();
+    ctx.beginPath();ctx.arc(bx+28,by+bh-22,11,0,Math.PI*2);
+    ctx.fillStyle='#1a1a1a';ctx.fill();ctx.strokeStyle=SIL;ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(bx+28,by+bh-22,4,0,Math.PI*2);
+    ctx.fillStyle='#0a0a0a';ctx.fill();
 
-    // Pin headers — digital
-    ctx.font='7px "Courier Prime",monospace';
+    // Digital pin headers
+    ctx.font='6.5px "Courier Prime",monospace';
+    const activeDig=[5,7,9,10,11];
     for(let i=0;i<14;i++){
-      const px2=bx+bw-16,py2=by+20+i*17;
-      const isActive=[6,9,10,11,13].includes(i);
-      const pulse=isActive?(0.5+0.5*Math.sin(t*.08+i)):0;
-      ctx.fillStyle=isActive?`rgba(201,168,76,${0.6+pulse*.4})`:'rgba(168,168,184,0.3)';
-      ctx.fillRect(px2,py2,14,8);
-      ctx.fillStyle=isActive?GOLD:'rgba(168,168,184,0.4)';
-      ctx.textAlign='right';ctx.fillText('D'+i,px2-3,py2+5);
+      const px=bx+bw-15,py2=by+18+i*16.5;
+      const isA=activeDig.includes(i);
+      const pulse=isA?(0.5+0.5*Math.sin(t*.07+i)):0;
+      ctx.fillStyle=isA?`rgba(63,185,80,${0.55+pulse*.4})`:'rgba(168,184,176,0.25)';
+      ctx.fillRect(px,py2,13,7);
+      ctx.fillStyle=isA?GREEN:'rgba(168,184,176,0.35)';
+      ctx.textAlign='right';ctx.fillText('D'+i,px-2,py2+5.5);
     }
 
-    // Pin headers — analog
-    for(let i=0;i<6;i++){
-      const px2=bx+12,py2=by+bh-30-i*18;
-      const isActive=[0,4,5].includes(i);
-      const pulse=isActive?(0.5+0.5*Math.sin(t*.07+i)):0;
-      ctx.fillStyle=isActive?`rgba(0,151,157,${0.6+pulse*.4})`:'rgba(168,168,184,0.3)';
-      ctx.fillRect(px2,py2,14,8);
-      ctx.fillStyle=isActive?TEAL:'rgba(168,168,184,0.4)';
-      ctx.textAlign='left';ctx.fillText('A'+i,px2+17,py2+5);
+    // Analog pin headers
+    const activeAna=[0,1,2,3,4,5,6];
+    for(let i=0;i<8;i++){
+      const px=bx+10,py2=by+bh-24-i*17;
+      if(py2<by+20)continue;
+      const isA=activeAna.includes(i);
+      const pulse=isA?(0.5+0.5*Math.sin(t*.065+i)):0;
+      ctx.fillStyle=isA?`rgba(201,168,76,${0.55+pulse*.4})`:'rgba(168,184,176,0.25)';
+      ctx.fillRect(px,py2,13,7);
+      ctx.fillStyle=isA?AMBER:'rgba(168,184,176,0.35)';
+      ctx.textAlign='left';ctx.fillText('A'+i,px+16,py2+5.5);
     }
 
-    // LED indicators
-    const leds=[
-      {x:bx+bw-30,y:by+bh-20,col:TEAL,label:'TX'},
-      {x:bx+bw-50,y:by+bh-20,col:GOLD,label:'RX'},
-      {x:bx+bw-70,y:by+bh-20,col:'#ff5050',label:'PWR'},
-    ];
-    leds.forEach(l=>{
-      const lp=0.5+0.5*Math.sin(t*.06);
-      ctx.beginPath();ctx.arc(l.x,l.y,5,0,Math.PI*2);
-      ctx.fillStyle=l.col;ctx.globalAlpha=0.5+lp*.5;ctx.fill();ctx.globalAlpha=1;
-      ctx.font='7px "Courier Prime",monospace';ctx.fillStyle=l.col;ctx.textAlign='center';
-      ctx.fillText(l.label,l.x,l.y+14);
+    // LEDs
+    [{x:bx+bw-28,y:by+bh-18,c:TEAL,l:'TX'},
+     {x:bx+bw-46,y:by+bh-18,c:GREEN,l:'RX'},
+     {x:bx+bw-64,y:by+bh-18,c:'#ff5050',l:'PWR'}].forEach(led=>{
+      const lp=0.5+0.5*Math.sin(t*.055);
+      ctx.beginPath();ctx.arc(led.x,led.y,4.5,0,Math.PI*2);
+      ctx.fillStyle=led.c;ctx.globalAlpha=0.45+lp*.55;ctx.fill();ctx.globalAlpha=1;
+      ctx.font='6px "Courier Prime",monospace';ctx.fillStyle=led.c;
+      ctx.textAlign='center';ctx.fillText(led.l,led.x,led.y+13);
     });
 
-    // Traces (animated)
-    const tracePoints=[
-      {x:mx+mw,y:my+20,tx:bx+bw-16,ty:by+6*17+24,col:GOLD},
-      {x:mx+mw,y:my+32,tx:bx+bw-16,ty:by+9*17+24,col:GOLD},
-      {x:mx+mw,y:my+44,tx:bx+bw-16,ty:by+10*17+24,col:GOLD},
-      {x:mx,y:my+50,tx:bx+12+14,ty:by+bh-30-4*18+4,col:TEAL},
-      {x:mx,y:my+62,tx:bx+12+14,ty:by+bh-30-5*18+4,col:TEAL},
+    // Animated traces
+    const traces=[
+      {x:mx+mw,y:my+18,tx:bx+bw-15,ty:by+5*16.5+21,col:GREEN},
+      {x:mx+mw,y:my+29,tx:bx+bw-15,ty:by+7*16.5+21,col:AMBER},
+      {x:mx+mw,y:my+40,tx:bx+bw-15,ty:by+9*16.5+21,col:GREEN},
+      {x:mx,y:my+48,tx:bx+10+13,ty:by+bh-24-4*17+3,col:TEAL},
+      {x:mx,y:my+59,tx:bx+10+13,ty:by+bh-24-5*17+3,col:AMBER},
     ];
-    tracePoints.forEach((tp,i)=>{
-      const prog=((t*1.5+i*40)%200)/200;
-      const dashLen=30;
-      ctx.setLineDash([dashLen,200-dashLen]);
-      ctx.lineDashOffset=-prog*200;
-      ctx.beginPath();ctx.moveTo(tp.x,tp.y);
-      ctx.lineTo(tp.x+20,tp.y);ctx.lineTo(tp.x+20,tp.ty);ctx.lineTo(tp.tx,tp.ty);
-      ctx.strokeStyle=tp.col;ctx.lineWidth=1;ctx.globalAlpha=0.5;ctx.stroke();
+    traces.forEach((tr,i)=>{
+      const pr=((t*1.2+i*35)%180)/180;
+      ctx.setLineDash([24,180-24]);ctx.lineDashOffset=-pr*180;
+      ctx.beginPath();ctx.moveTo(tr.x,tr.y);
+      ctx.lineTo(tr.x+18,tr.y);ctx.lineTo(tr.x+18,tr.ty);ctx.lineTo(tr.tx,tr.ty);
+      ctx.strokeStyle=tr.col;ctx.lineWidth=0.9;ctx.globalAlpha=0.45;ctx.stroke();
       ctx.globalAlpha=1;ctx.setLineDash([]);
     });
   }
-
-  function loop(){drawChip();requestAnimationFrame(loop);}
+  function loop(){drawPCB();requestAnimationFrame(loop);}
   loop();
 })();
+
+/* ═══════════════════════════════════
+   COUNTER ANIMATION FOR STATS
+═══════════════════════════════════ */
+const statsObs=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.querySelectorAll('.stat-num').forEach(el=>{
+        el.style.animation='counterUp 0.6s ease forwards';
+      });
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('.stats-band').forEach(el=>statsObs.observe(el));
 </script>
 </body>
 </html>

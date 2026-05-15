@@ -674,6 +674,23 @@ footer{
   animation:ripple .6s ease-out forwards;
 }
 
+/* ── NAME SIGNATURE ── */
+#name-signature{
+  text-align:center;
+  padding:44px 0 60px;
+  background:#06100a;
+  border-top:0.5px solid rgba(255,255,255,.04);
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-weight:400;
+  font-size:clamp(32px,5vw,64px);
+  letter-spacing:3px;
+  background-image:linear-gradient(90deg,#1a4a28,#7ee787,#3fb950,#1a4a28);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
 @media(max-width:1100px){
   nav{padding:0 32px;}
   .hero{grid-template-columns:1fr;padding:120px 32px 64px;text-align:center;}
@@ -1220,25 +1237,7 @@ footer{
 </footer>
 
 <!-- NAME SIGNATURE AT BOTTOM -->
-<div style="
-  text-align:center;
-  padding:40px 0 52px;
-  background:var(--black);
-  border-top:0.5px solid rgba(255,255,255,.04);
-">
-  <span style="
-    font-family:'Playfair Display',serif;
-    font-style:italic;
-    font-size:clamp(28px,4vw,52px);
-    font-weight:400;
-    letter-spacing:2px;
-    background:linear-gradient(90deg,var(--green-dim),var(--green-light),var(--green-dim));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    opacity:0.7;
-  ">Joyal Varghese</span>
-</div>
+<div id="name-signature">Joyal Varghese</div>
 
 <script>
 /* ═══════════════════════════════════

@@ -225,6 +225,21 @@ nav:hover{border-bottom-color:rgba(63,185,80,0.4);}
 .hero-desc span{color:var(--green);}
 .hero-desc span.amber{color:var(--amber);}
 
+/* TEAM BADGE */
+.team-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(63,185,80,0.07);
+  border:1px solid var(--green-border);
+  padding:10px 18px;
+  margin-bottom:28px;
+  font-size:11px;letter-spacing:1.5px;
+  color:var(--silver);
+  font-weight:300;
+  line-height:1.8;
+}
+.team-badge svg{width:14px;height:14px;stroke:var(--green);fill:none;stroke-width:1.5;flex-shrink:0;}
+.team-badge strong{color:var(--green-light);font-weight:700;letter-spacing:.5px;}
+
 .btn-green{
   display:inline-flex;align-items:center;gap:12px;
   background:linear-gradient(135deg,var(--green-dim),var(--green),var(--green-dim));
@@ -573,6 +588,56 @@ nav:hover{border-bottom-color:rgba(63,185,80,0.4);}
   margin-top:8px;display:block;
 }
 
+/* ── TEAM SECTION ── */
+.team-section{
+  padding:80px 64px;
+  background:var(--black2);
+  border-top:0.5px solid rgba(255,255,255,.05);
+  position:relative;
+}
+.team-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(63,185,80,.4),transparent);
+}
+.team-inner{text-align:center;}
+.team-label{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--green);font-weight:500;margin-bottom:16px;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+}
+.team-label::before,.team-label::after{content:'';width:40px;height:1px;background:var(--green-border);}
+.team-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(20px,2.5vw,30px);
+  font-weight:400;color:var(--silver);
+  margin-bottom:40px;
+  font-style:italic;
+}
+.team-members{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:16px;
+}
+.team-member{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(63,185,80,0.06);
+  border:1px solid var(--green-border);
+  padding:14px 24px;
+  transition:all .3s;
+  position:relative;overflow:hidden;
+}
+.team-member::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  transform:scaleX(0);transition:transform .3s;
+}
+.team-member:hover{background:rgba(63,185,80,0.12);border-color:var(--green);transform:translateY(-3px);}
+.team-member:hover::before{transform:scaleX(1);}
+.team-member-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.team-member-name{
+  font-family:'Courier Prime',monospace;
+  font-size:13px;font-weight:700;
+  color:var(--white);letter-spacing:1.5px;text-transform:uppercase;
+}
+
 /* ── FOOTER ── */
 footer{
   background:var(--black);
@@ -590,6 +655,8 @@ footer{
 .footer-brand-sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--silver-dark);}
 .footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:16px;}
 .footer-col p{font-size:12px;color:var(--silver-dark);line-height:2;font-family:'Courier Prime',monospace;}
+.footer-team-names{font-size:12px;color:var(--silver-dark);line-height:2;font-family:'Courier Prime',monospace;}
+.footer-team-names strong{color:var(--green-light);font-weight:700;}
 .footer-bottom{display:flex;justify-content:space-between;align-items:center;}
 .footer-bottom p{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:1px;}
 .footer-bottom a{color:var(--green);text-decoration:none;}
@@ -613,7 +680,7 @@ footer{
   #house-canvas{width:min(360px,80vw);height:min(360px,80vw);}
   .hero-desc{margin:0 auto 48px;}
   .hardware-section,.wokwi-inner,.pinout-inner{grid-template-columns:1fr;gap:48px;}
-  .hardware-section,.wokwi-section,.features-section,.pinout-section,.projects-section{padding:72px 32px;}
+  .hardware-section,.wokwi-section,.features-section,.pinout-section,.projects-section,.team-section{padding:72px 32px;}
   .stats-band{grid-template-columns:repeat(3,1fr);}
   .feat-grid{grid-template-columns:1fr 1fr;}
   .projects-grid{grid-template-columns:1fr;}
@@ -626,6 +693,8 @@ footer{
   .nav-links{display:none;}
   .feat-grid{grid-template-columns:1fr;}
   .stats-band{grid-template-columns:repeat(2,1fr);}
+  .team-members{gap:10px;}
+  .team-member{padding:10px 16px;}
 }
 </style>
 </head>
@@ -680,13 +749,26 @@ footer{
   <div class="hero-left">
     <div class="hero-overline fu d1">
       <span class="hero-overline-line"></span>
-      <span class="hero-overline-text">Engineering Portfolio · KS0576 · 2025</span>
+      <span class="hero-overline-text">Engineering Portfolio · KS0576 · 2026</span>
     </div>
     <h1 class="hero-h1 fu d2">
       SMART
       <span class="green-line">ECO HOUSE</span>
     </h1>
     <p class="hero-sub fu d3">Automated Home · Arduino UNO</p>
+
+    <!-- TEAM BADGE -->
+    <div class="team-badge fu d3">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span>Team Project &mdash;
+        <strong>Joyal</strong> &nbsp;·&nbsp;
+        <strong>Nabeel</strong> &nbsp;·&nbsp;
+        <strong>Stephen</strong> &nbsp;·&nbsp;
+        <strong>Jino</strong> &nbsp;·&nbsp;
+        <strong>Nick</strong>
+      </span>
+    </div>
+
     <p class="hero-desc fu d4">
       Built on <span>Arduino UNO PLUS</span> — featuring
       <span class="amber">auto-irrigation</span>, PIR motion detection,
@@ -1076,6 +1158,36 @@ footer{
   </div>
 </section>
 
+<!-- TEAM SECTION -->
+<section class="team-section">
+  <div class="team-inner reveal">
+    <div class="team-label">Team Members</div>
+    <p class="team-title">Built collaboratively by a team of five engineers</p>
+    <div class="team-members">
+      <div class="team-member">
+        <div class="team-member-dot"></div>
+        <span class="team-member-name"><strong>Joyal</strong></span>
+      </div>
+      <div class="team-member">
+        <div class="team-member-dot"></div>
+        <span class="team-member-name"><strong>Nabeel</strong></span>
+      </div>
+      <div class="team-member">
+        <div class="team-member-dot"></div>
+        <span class="team-member-name"><strong>Stephen</strong></span>
+      </div>
+      <div class="team-member">
+        <div class="team-member-dot"></div>
+        <span class="team-member-name"><strong>Jino</strong></span>
+      </div>
+      <div class="team-member">
+        <div class="team-member-dot"></div>
+        <span class="team-member-name"><strong>Nick</strong></span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-gold-line"></div>
@@ -1092,14 +1204,17 @@ footer{
       <p>Kit: Keyestudio KS0576</p>
     </div>
     <div class="footer-col">
-      <div class="footer-col-title">Hardware</div>
-      <p>MCU: ATmega328P @ 16 MHz</p>
-      <p>IMU: XHT11 + PIR + LDR</p>
-      <p>ACT: Relay + Fan + Pump</p>
+      <div class="footer-col-title">Team</div>
+      <div class="footer-team-names">
+        <p><strong>Joyal</strong> &nbsp;·&nbsp; <strong>Nabeel</strong> &nbsp;·&nbsp; <strong>Stephen</strong></p>
+        <p><strong>Jino</strong> &nbsp;·&nbsp; <strong>Nick</strong></p>
+        <p>MCU: ATmega328P @ 16 MHz</p>
+        <p>ACT: Relay + Fan + Pump</p>
+      </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 Joyal Varghese · Engineering Portfolio</p>
+    <p>© 2026 Joyal Varghese · Engineering Portfolio &mdash; <strong>Joyal · Nabeel · Stephen · Jino · Nick</strong></p>
     <p><a href="https://wokwi.com/projects/463453944774474753" target="_blank">wokwi.com/projects/463453944774474753</a></p>
   </div>
 </footer>
@@ -1120,7 +1235,7 @@ function animRing(){
   ring.style.left=rx+'px';ring.style.top=ry+'px';
   requestAnimationFrame(animRing);
 }animRing();
-document.querySelectorAll('a,button,.feat-card,.project-card').forEach(el=>{
+document.querySelectorAll('a,button,.feat-card,.project-card,.team-member').forEach(el=>{
   el.addEventListener('mouseenter',()=>{
     cur.style.width='20px';cur.style.height='20px';
     ring.style.width='56px';ring.style.height='56px';

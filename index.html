@@ -17,6 +17,18 @@
         margin: 0 0 10px;
     }
 
+    .student-info {
+        margin-top: 20px;
+        background: #334155;
+        display: inline-block;
+        padding: 12px 25px;
+        border-radius: 8px;
+    }
+
+    .student-info p {
+        margin: 5px 0;
+    }
+
     main {
         max-width: 1000px;
         margin: 30px auto;
@@ -64,7 +76,13 @@
     }
 </style>
 
-</head> <body> <header> <h1>HTML Tags Explained in Simple Words</h1> <p>A beginner-friendly HTML tag reference</p> </header> <main>
+</head> <body> <header> <h1>HTML Tags Explained in Simple Words</h1> <p>A beginner-friendly HTML tag reference</p>
+<div class="student-info">
+    <p><strong>Name:</strong> Joyal Varghese</p>
+    <p><strong>Group:</strong> 4230</p>
+</div>
+
+</header> <main>
 <section>
     <h2>Document Structure</h2>
 
@@ -402,11 +420,6 @@
     </div>
 
     <div class="tag">
-        <h3>&lt;optgroup&gt;</h3>
-        <p>This groups related options inside a dropdown. It is helpful when there are many choices.</p>
-    </div>
-
-    <div class="tag">
         <h3>&lt;fieldset&gt;</h3>
         <p>This groups related form fields together. For example, personal information fields can be placed inside one fieldset.</p>
     </div>
@@ -417,11 +430,6 @@
     </div>
 
     <div class="tag">
-        <h3>&lt;datalist&gt;</h3>
-        <p>This provides suggestions for an input field. Users can type their own value or choose one of the suggestions.</p>
-    </div>
-
-    <div class="tag">
         <h3>&lt;progress&gt;</h3>
         <p>This shows the progress of a task. A file upload or download progress bar is a common example.</p>
     </div>
@@ -429,11 +437,6 @@
     <div class="tag">
         <h3>&lt;meter&gt;</h3>
         <p>This shows a value within a known range. Battery level, storage usage, or a score can be shown with it.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;output&gt;</h3>
-        <p>This displays the result of a calculation or user action. JavaScript can update it when something changes.</p>
     </div>
 </section>
 
@@ -457,61 +460,7 @@
 </section>
 
 <section>
-    <h2>Useful Text Elements</h2>
-
-    <div class="tag">
-        <h3>&lt;abbr&gt;</h3>
-        <p>This represents an abbreviation such as HTML or CSS. You can provide the full meaning of the abbreviation.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;blockquote&gt;</h3>
-        <p>This represents a longer quotation from another source. Browsers normally display it as an indented block.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;q&gt;</h3>
-        <p>This represents a short quotation inside normal text. Browsers usually add quotation marks around it.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;code&gt;</h3>
-        <p>This represents a piece of computer code. Browsers normally display it using a monospace font.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;pre&gt;</h3>
-        <p>This displays text while preserving spaces and line breaks. It is commonly used for code examples.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;kbd&gt;</h3>
-        <p>This represents keyboard input. For example, you can use it to show a keyboard shortcut like Ctrl + C.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;sub&gt;</h3>
-        <p>This places text below the normal text line. It is useful for formulas such as H₂O.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;sup&gt;</h3>
-        <p>This places text above the normal text line. It is useful for expressions such as x².</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;time&gt;</h3>
-        <p>This represents a date or time. It can also provide a machine-readable version of that date or time.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;cite&gt;</h3>
-        <p>This identifies the title of a creative work such as a book, movie, song, or article.</p>
-    </div>
-</section>
-
-<section>
-    <h2>JavaScript, Graphics and Web Components</h2>
+    <h2>JavaScript and Graphics</h2>
 
     <div class="tag">
         <h3>&lt;script&gt;</h3>
@@ -537,11 +486,6 @@
         <h3>&lt;template&gt;</h3>
         <p>This stores HTML that is not displayed immediately. JavaScript can use it later as a template for creating content.</p>
     </div>
-
-    <div class="tag">
-        <h3>&lt;slot&gt;</h3>
-        <p>This is used with Web Components. It acts as a placeholder where content can be inserted into a custom component.</p>
-    </div>
 </section>
 
 <section>
@@ -566,29 +510,4 @@
         <h3>&lt;frameset&gt;</h3>
         <p>This was used to divide a browser window into multiple frames. It is obsolete and should not be used in new websites.</p>
     </div>
-</section>
-
-<section>
-    <h2>Remember</h2>
-
-    <p>
-        You do not need to memorize every HTML tag.
-        Start with the important ones such as
-        <code>&lt;html&gt;</code>,
-        <code>&lt;head&gt;</code>,
-        <code>&lt;body&gt;</code>,
-        <code>&lt;h1&gt;</code>,
-        <code>&lt;p&gt;</code>,
-        <code>&lt;a&gt;</code>,
-        <code>&lt;img&gt;</code>,
-        <code>&lt;div&gt;</code>,
-        <code>&lt;section&gt;</code>,
-        <code>&lt;form&gt;</code>,
-        <code>&lt;input&gt;</code>, and
-        <code>&lt;button&gt;</code>.
-    </p>
-
-    <p>
-        Once you understand these basic tags, learning the rest becomes much easier.
-    </p>
 </section>

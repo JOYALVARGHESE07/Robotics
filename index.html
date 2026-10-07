@@ -1,513 +1,138 @@
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: #f4f6f8;
-        color: #222;
-    }
-
-    header {
-        background: #1e293b;
-        color: white;
-        text-align: center;
-        padding: 35px 20px;
-    }
-
-    header h1 {
-        margin: 0 0 10px;
-    }
-
-    .student-info {
-        margin-top: 20px;
-        background: #334155;
-        display: inline-block;
-        padding: 12px 25px;
-        border-radius: 8px;
-    }
-
-    .student-info p {
-        margin: 5px 0;
-    }
-
-    main {
-        max-width: 1000px;
-        margin: 30px auto;
-        padding: 0 20px;
-    }
-
-    section {
-        background: white;
-        margin-bottom: 25px;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    h2 {
-        color: #2563eb;
-        border-bottom: 2px solid #e5e7eb;
-        padding-bottom: 10px;
-    }
-
-    .tag {
-        background: #f8fafc;
-        border-left: 4px solid #2563eb;
-        padding: 15px;
-        margin: 15px 0;
-        border-radius: 5px;
-    }
-
-    .tag h3 {
-        margin-top: 0;
-        color: #111827;
-    }
-
-    code {
-        background: #e5e7eb;
-        color: #dc2626;
-        padding: 3px 6px;
-        border-radius: 4px;
-    }
-
-    footer {
-        text-align: center;
-        padding: 30px;
-        color: #666;
-    }
-</style>
-
-</head> <body> <header> <h1>HTML Tags Explained in Simple Words</h1> <p>A beginner-friendly HTML tag reference</p>
-<div class="student-info">
-    <p><strong>Name:</strong> Joyal Varghese</p>
-    <p><strong>Group:</strong> 4230</p>
-</div>
-
-</header> <main>
-<section>
-    <h2>Document Structure</h2>
-
-    <div class="tag">
-        <h3>&lt;!DOCTYPE html&gt;</h3>
-        <p>This tells the browser that the page is written using modern HTML. It should be placed at the very beginning of the HTML file.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;html&gt;</h3>
-        <p>This is the main container of an HTML page. All the HTML content normally goes inside this tag.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;head&gt;</h3>
-        <p>This contains information about the webpage that the browser needs. Things like the title, CSS, and metadata are normally placed here.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;title&gt;</h3>
-        <p>This gives your webpage a title. You normally see this title in the browser tab.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;body&gt;</h3>
-        <p>This contains the content that visitors see on the webpage. Text, images, buttons, forms, and other visible content go here.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;meta&gt;</h3>
-        <p>This provides extra information about your webpage to the browser. It is commonly used for character encoding and responsive design.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;link&gt;</h3>
-        <p>This connects your HTML page with another resource. It is commonly used to connect an external CSS file.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;style&gt;</h3>
-        <p>This allows you to write CSS directly inside your HTML file. You can use it to control colors, fonts, spacing, and layout.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Headings and Text</h2>
-
-    <div class="tag">
-        <h3>&lt;h1&gt; - &lt;h6&gt;</h3>
-        <p>These tags create headings. H1 is normally the most important heading, while H6 represents a lower-level heading.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;p&gt;</h3>
-        <p>This creates a paragraph of text. It is one of the most commonly used HTML tags.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;br&gt;</h3>
-        <p>This creates a line break. It moves the following content to a new line without creating a new paragraph.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;hr&gt;</h3>
-        <p>This creates a thematic break between content. Browsers usually display it as a horizontal line.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;strong&gt;</h3>
-        <p>This tells the browser that the text is important. It normally appears bold, but its main purpose is to show importance.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;em&gt;</h3>
-        <p>This gives text emphasis. Browsers normally display emphasized text in italic.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;b&gt;</h3>
-        <p>This makes text visually bold. It is mainly used when you want text to stand out without giving it special importance.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;i&gt;</h3>
-        <p>This represents text that is different from normal text. It is commonly displayed in italic.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;small&gt;</h3>
-        <p>This displays text as smaller side information. Copyright notes and fine print are common examples.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;mark&gt;</h3>
-        <p>This highlights text that you want the reader to notice. Browsers normally display it with a highlighted background.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;del&gt;</h3>
-        <p>This represents text that has been deleted. Browsers normally show a line through the deleted text.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;ins&gt;</h3>
-        <p>This represents text that has been added to a document. It can be useful when showing changes.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;s&gt;</h3>
-        <p>This shows text that is no longer correct or relevant. The browser normally puts a line through it.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;span&gt;</h3>
-        <p>This is a general inline container with no special meaning. It is often used to style a small part of text with CSS.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Links</h2>
-
-    <div class="tag">
-        <h3>&lt;a&gt;</h3>
-        <p>This creates a clickable link. The <code>href</code> attribute tells the browser where the link should go.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Lists</h2>
-
-    <div class="tag">
-        <h3>&lt;ul&gt;</h3>
-        <p>This creates an unordered list. The items normally appear with bullet points.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;ol&gt;</h3>
-        <p>This creates an ordered list. The items normally appear with numbers.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;li&gt;</h3>
-        <p>This represents one item inside a list. It is normally placed inside a UL or OL element.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;dl&gt;</h3>
-        <p>This creates a description list. It is useful for showing terms together with their explanations.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;dt&gt;</h3>
-        <p>This represents the term in a description list. Think of it as the word you want to explain.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;dd&gt;</h3>
-        <p>This contains the explanation of a term. It normally comes after a DT element.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Page Structure</h2>
-
-    <div class="tag">
-        <h3>&lt;header&gt;</h3>
-        <p>This represents the introductory area of a page or section. It can contain a logo, heading, navigation, or introduction.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;nav&gt;</h3>
-        <p>This contains important navigation links. A website's main menu is a common example.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;main&gt;</h3>
-        <p>This contains the main content of the webpage. It should contain the information that is most important to the page.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;section&gt;</h3>
-        <p>This groups related content together. For example, About, Services, and Contact can each be separate sections.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;article&gt;</h3>
-        <p>This represents content that can stand on its own. Blog posts, news articles, and forum posts are common examples.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;aside&gt;</h3>
-        <p>This contains information related to the main content but not essential to it. Sidebars and related links often use it.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;footer&gt;</h3>
-        <p>This represents the bottom part of a page or section. Copyright information and extra links often go here.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;div&gt;</h3>
-        <p>This is a general-purpose container. It is commonly used to group content so that CSS or JavaScript can work with it.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Images and Media</h2>
-
-    <div class="tag">
-        <h3>&lt;img&gt;</h3>
-        <p>This displays an image on your webpage. The SRC attribute tells the browser where the image is located, while ALT describes the image.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;figure&gt;</h3>
-        <p>This groups self-contained content such as an image or diagram. It can be combined with a caption.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;figcaption&gt;</h3>
-        <p>This provides a caption for content inside a figure. It helps explain what an image or diagram represents.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;audio&gt;</h3>
-        <p>This adds audio to a webpage. Users can normally play, pause, and control the sound.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;video&gt;</h3>
-        <p>This adds a video player to your webpage. It can be used for tutorials, movies, demonstrations, and other videos.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;source&gt;</h3>
-        <p>This provides a media file for audio, video, or picture elements. Multiple sources can be provided so the browser can choose one.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;track&gt;</h3>
-        <p>This adds timed text to audio or video. Subtitles and captions are common examples.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;picture&gt;</h3>
-        <p>This allows you to provide different images for different screen sizes or situations. It is useful for responsive images.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;iframe&gt;</h3>
-        <p>This displays another webpage or external content inside your webpage. Maps, videos, and documents can be embedded with it.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Tables</h2>
-
-    <div class="tag">
-        <h3>&lt;table&gt;</h3>
-        <p>This creates a table with rows and columns. It should be used for displaying data, not for designing the webpage layout.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;tr&gt;</h3>
-        <p>This creates one row in a table. A row can contain header cells or normal data cells.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;th&gt;</h3>
-        <p>This creates a table header cell. It normally describes a column or row of information.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;td&gt;</h3>
-        <p>This creates a normal table data cell. It contains the actual information in the table.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;thead&gt;</h3>
-        <p>This groups the header rows of a table. Column headings are usually placed inside it.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;tbody&gt;</h3>
-        <p>This groups the main data rows of a table. Most of the table's content normally goes here.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;tfoot&gt;</h3>
-        <p>This groups the footer rows of a table. Totals and summaries are common examples.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;caption&gt;</h3>
-        <p>This gives a table a title or description. It helps users understand what the table is about.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Forms</h2>
-
-    <div class="tag">
-        <h3>&lt;form&gt;</h3>
-        <p>This creates a form where users can enter information. Login, registration, search, and contact forms are common examples.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;input&gt;</h3>
-        <p>This creates an input field or control. Depending on its type, it can be a text field, checkbox, password field, date picker, and more.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;label&gt;</h3>
-        <p>This gives a form field a readable name. For example, it can tell the user that an input is asking for an email address.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;button&gt;</h3>
-        <p>This creates a clickable button. It can submit a form or perform an action using JavaScript.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;textarea&gt;</h3>
-        <p>This creates a multi-line text field. It is useful for comments, messages, descriptions, and feedback.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;select&gt;</h3>
-        <p>This creates a dropdown menu. Users can select one of the available options.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;option&gt;</h3>
-        <p>This represents one choice inside a dropdown menu. Users can select an option from the list.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;fieldset&gt;</h3>
-        <p>This groups related form fields together. For example, personal information fields can be placed inside one fieldset.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;legend&gt;</h3>
-        <p>This gives a fieldset a title. It tells users what the group of form controls is about.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;progress&gt;</h3>
-        <p>This shows the progress of a task. A file upload or download progress bar is a common example.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;meter&gt;</h3>
-        <p>This shows a value within a known range. Battery level, storage usage, or a score can be shown with it.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Interactive Elements</h2>
-
-    <div class="tag">
-        <h3>&lt;details&gt;</h3>
-        <p>This creates information that users can open and close. It is very useful for FAQs and expandable content.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;summary&gt;</h3>
-        <p>This provides the clickable heading for a details element. Clicking it opens or closes the hidden information.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;dialog&gt;</h3>
-        <p>This represents a dialog box or popup. It can be used for messages, confirmations, or small forms.</p>
-    </div>
-</section>
-
-<section>
-    <h2>JavaScript and Graphics</h2>
-
-    <div class="tag">
-        <h3>&lt;script&gt;</h3>
-        <p>This adds JavaScript to a webpage. JavaScript can make the page interactive and change content dynamically.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;noscript&gt;</h3>
-        <p>This provides alternative content when JavaScript is disabled or unavailable. It gives users something useful instead of an empty area.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;canvas&gt;</h3>
-        <p>This creates a drawing area controlled by JavaScript. It can be used for games, charts, animations, and custom graphics.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;svg&gt;</h3>
-        <p>This is used for scalable vector graphics. It is useful for icons, logos, diagrams, and illustrations.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;template&gt;</h3>
-        <p>This stores HTML that is not displayed immediately. JavaScript can use it later as a template for creating content.</p>
-    </div>
-</section>
-
-<section>
-    <h2>Old / Obsolete Tags</h2>
-
-    <div class="tag">
-        <h3>&lt;center&gt;</h3>
-        <p>This was previously used to center content. It is obsolete now, so CSS should be used instead.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;font&gt;</h3>
-        <p>This was used to change the font, size, and color of text. Modern HTML uses CSS for these things.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;marquee&gt;</h3>
-        <p>This created scrolling text or content. It is obsolete and should not be used in modern websites.</p>
-    </div>
-
-    <div class="tag">
-        <h3>&lt;frameset&gt;</h3>
-        <p>This was used to divide a browser window into multiple frames. It is obsolete and should not be used in new websites.</p>
-    </div>
-</section>
+<h1>HTML Tags and Their Uses</h1>
+
+<p><b>Name:</b> Joyal Varghese</p>
+<p><b>Group:</b> 4230</p>
+
+<hr>
+
+<h2>Basic HTML Tags</h2>
+
+<h3>&lt;html&gt;</h3>
+<p>This is the main tag of an HTML page. All HTML content is written inside it.</p>
+
+<h3>&lt;head&gt;</h3>
+<p>This contains information about the webpage. The title and other settings are usually placed here.</p>
+
+<h3>&lt;title&gt;</h3>
+<p>This gives a name to the webpage. You can see it on the browser tab.</p>
+
+<h3>&lt;body&gt;</h3>
+<p>This contains everything that appears on the webpage. Text, images and buttons go inside it.</p>
+
+<h2>Text Tags</h2>
+
+<h3>&lt;h1&gt; to &lt;h6&gt;</h3>
+<p>These tags create headings. H1 is the biggest and H6 is the smallest.</p>
+
+<h3>&lt;p&gt;</h3>
+<p>This is used to write a paragraph. It is one of the most common HTML tags.</p>
+
+<h3>&lt;br&gt;</h3>
+<p>This moves text to the next line. It creates a simple line break.</p>
+
+<h3>&lt;hr&gt;</h3>
+<p>This creates a horizontal line. It can be used to separate different parts of a page.</p>
+
+<h3>&lt;b&gt;</h3>
+<p>This makes text bold. It is useful when you want text to stand out.</p>
+
+<h3>&lt;i&gt;</h3>
+<p>This makes text italic. It can be used to give text a different style.</p>
+
+<h3>&lt;strong&gt;</h3>
+<p>This shows that some text is important. Browsers usually display it in bold.</p>
+
+<h3>&lt;em&gt;</h3>
+<p>This gives text emphasis. Browsers usually display it in italic.</p>
+
+<h2>Links and Images</h2>
+
+<h3>&lt;a&gt;</h3>
+<p>This creates a link. Users can click it to go to another page or website.</p>
+
+<h3>&lt;img&gt;</h3>
+<p>This adds an image to a webpage. The image location is normally given using the src attribute.</p>
+
+<h2>Lists</h2>
+
+<h3>&lt;ul&gt;</h3>
+<p>This creates a list with bullet points. It is called an unordered list.</p>
+
+<h3>&lt;ol&gt;</h3>
+<p>This creates a numbered list. It is called an ordered list.</p>
+
+<h3>&lt;li&gt;</h3>
+<p>This creates one item inside a list. It is used inside ul or ol.</p>
+
+<h2>Page Layout</h2>
+
+<h3>&lt;header&gt;</h3>
+<p>This represents the top part of a webpage or section. It can contain a heading or logo.</p>
+
+<h3>&lt;nav&gt;</h3>
+<p>This contains navigation links. Website menus commonly use this tag.</p>
+
+<h3>&lt;main&gt;</h3>
+<p>This contains the main content of the webpage. It should contain the most important information.</p>
+
+<h3>&lt;section&gt;</h3>
+<p>This divides a webpage into different sections. Each section usually contains related content.</p>
+
+<h3>&lt;footer&gt;</h3>
+<p>This represents the bottom part of a webpage. Copyright and contact information can go here.</p>
+
+<h3>&lt;div&gt;</h3>
+<p>This is a general container. It is often used to group elements together.</p>
+
+<h2>Forms</h2>
+
+<h3>&lt;form&gt;</h3>
+<p>This creates a form. It is used when users need to enter information.</p>
+
+<h3>&lt;input&gt;</h3>
+<p>This creates an input field. It can be used for names, emails, passwords, and other information.</p>
+
+<h3>&lt;label&gt;</h3>
+<p>This gives a name to an input field. It helps users understand what they should enter.</p>
+
+<h3>&lt;button&gt;</h3>
+<p>This creates a clickable button. It can be used to submit a form or perform an action.</p>
+
+<h3>&lt;textarea&gt;</h3>
+<p>This creates a large text box. It is useful for writing messages or comments.</p>
+
+<h2>Tables</h2>
+
+<h3>&lt;table&gt;</h3>
+<p>This creates a table. It is used to display information in rows and columns.</p>
+
+<h3>&lt;tr&gt;</h3>
+<p>This creates one row in a table.</p>
+
+<h3>&lt;th&gt;</h3>
+<p>This creates a heading cell in a table. It usually contains the name of a column.</p>
+
+<h3>&lt;td&gt;</h3>
+<p>This creates a normal data cell in a table.</p>
+
+<h2>Other Useful Tags</h2>
+
+<h3>&lt;audio&gt;</h3>
+<p>This adds audio to a webpage. Users can play and control the sound.</p>
+
+<h3>&lt;video&gt;</h3>
+<p>This adds a video to a webpage. Users can watch and control the video.</p>
+
+<h3>&lt;iframe&gt;</h3>
+<p>This displays another webpage or external content inside your page.</p>
+
+<h3>&lt;script&gt;</h3>
+<p>This is used to add JavaScript to a webpage. JavaScript makes webpages interactive.</p>
+
+<h3>&lt;style&gt;</h3>
+<p>This is used to add CSS to an HTML page. CSS controls how the webpage looks.</p>
+
+<hr>
+
+<p><b>Name:</b> Joyal Varghese</p>
+<p><b>Group:</b> 4230</p>
